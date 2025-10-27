@@ -11,6 +11,7 @@ class AspirasiController extends Controller
     public function index()
     {
         $aspirasis = Aspirasi::latest()->paginate(10);
+
         return view('admin.aspirasi.index', compact('aspirasis'));
     }
 
@@ -22,6 +23,7 @@ class AspirasiController extends Controller
     public function destroy(Aspirasi $aspirasi)
     {
         $aspirasi->delete();
+
         return back()->with('ok', 'Aspirasi berhasil dihapus');
     }
 
@@ -29,6 +31,7 @@ class AspirasiController extends Controller
     {
         $aspirasis = Aspirasi::latest()->get();
         $pdf = PDF::loadView('admin.aspirasi.pdf', ['aspirasis' => $aspirasis]);
+
         return $pdf->download('laporan-aspirasi.pdf');
     }
 }

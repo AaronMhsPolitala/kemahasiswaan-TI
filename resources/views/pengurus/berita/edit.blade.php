@@ -54,6 +54,6 @@
 
 @push('scripts')
 <script>
-    CKEDITOR.replace('deskripsi');
+    CKEDITOR.replace('deskripsi', { versionCheck: false });
 </script>
 @endpush

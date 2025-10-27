@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
@@ -36,6 +36,7 @@ class GoogleController extends Controller
             if ($user) {
                 // Jika user sudah ada, login
                 Auth::login($user);
+
                 return redirect()->intended('/user/beranda');
             } else {
                 // Jika user belum ada, buat akun baru
@@ -48,12 +49,13 @@ class GoogleController extends Controller
                 ]);
 
                 Auth::login($newUser);
+
                 return redirect()->intended('/user/beranda');
             }
 
         } catch (\Exception $e) {
             // Tangani error, misalnya log error atau redirect dengan pesan error
-            return redirect('/login')->with('error', 'Gagal login dengan Google: ' . $e->getMessage());
+            return redirect('/login')->with('error', 'Gagal login dengan Google: '.$e->getMessage());
         }
     }
 }

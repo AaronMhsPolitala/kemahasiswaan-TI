@@ -48,6 +48,7 @@
   <table class="data-table">
     <thead>
       <tr>
+        <th>Photo</th>
         <th>Name</th>
         <th>Email</th>
         <th>No. WA</th>
@@ -58,6 +59,7 @@
     <tbody>
       @forelse ($users as $user)
         <tr>
+          <td><img src="{{ $user->photo_url ?? 'https://i.pravatar.cc/40' }}" alt="Photo" style="width: 40px; height: 40px; border-radius: 50%;"></td>
           <td>{{ $user->name }}</td>
           <td>{{ $user->email }}</td>
           <td>{{ $user->no_wa ?? 'N/A' }}</td>
@@ -72,7 +74,7 @@
         </tr>
       @empty
         <tr>
-          <td colspan="5" style="text-align:center; color:#888; padding:20px;">
+          <td colspan="6" style="text-align:center; color:#888; padding:20px;">
             Belum ada data user
           </td>
         </tr>
@@ -89,7 +91,8 @@
   <div class="custom-modal-content">
     <span class="custom-modal-close">&times;</span>
     <h2>Detail Pengguna</h2>
-    <div style="padding-top:1rem;">
+    <div style="padding-top:1rem; text-align: center;">
+        <img id="view_photo" src="" alt="Photo" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
         <p><strong>Nama:</strong> <span id="view_name"></span></p>
         <p><strong>Email:</strong> <span id="view_email"></span></p>
         <p><strong>No. WA:</strong> <span id="view_no_wa"></span></p>
@@ -180,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/pengurus/users/${userId}`)
                 .then(response => response.json())
                 .then(user => {
+                    document.getElementById('view_photo').src = user.photo_url || 'https://i.pravatar.cc/100';
                     document.getElementById('view_name').textContent = user.name;
                     document.getElementById('view_email').textContent = user.email;
                     document.getElementById('view_no_wa').textContent = user.no_wa || 'N/A';

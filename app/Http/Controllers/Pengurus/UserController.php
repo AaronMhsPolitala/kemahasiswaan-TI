@@ -16,6 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::latest()->paginate(10);
+
         return view('pengurus.users.index', compact('users'));
     }
 
@@ -78,6 +79,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
         return redirect()->route('pengurus.users.index')->with('success', 'User berhasil dihapus.');
     }
 }

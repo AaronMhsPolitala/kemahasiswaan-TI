@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             // Tambah kolom hanya kalau belum ada
-            if (!Schema::hasColumn('users', 'google_id')) {
+            if (! Schema::hasColumn('users', 'google_id')) {
                 $table->string('google_id')->nullable()->after('email');
             }
 
-            if (!Schema::hasColumn('users', 'avatar')) {
+            if (! Schema::hasColumn('users', 'avatar')) {
                 $table->string('avatar')->nullable()->after('google_id');
             }
 
-            if (!Schema::hasColumn('users', 'role')) {
+            if (! Schema::hasColumn('users', 'role')) {
                 $table->string('role')->default('user')->after('avatar');
             }
 
-            if (!Schema::hasColumn('users', 'is_verified')) {
+            if (! Schema::hasColumn('users', 'is_verified')) {
                 $table->boolean('is_verified')->default(false)->after('role');
             }
         });

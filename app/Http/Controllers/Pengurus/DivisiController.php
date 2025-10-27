@@ -12,6 +12,7 @@ class DivisiController extends Controller
     public function index()
     {
         $divisis = Divisi::latest()->paginate(10);
+
         return view('pengurus.divisi.index', compact('divisis'));
     }
 
@@ -25,7 +26,7 @@ class DivisiController extends Controller
         $request->validate([
             'nama_divisi' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'photo_divisi' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo_divisi' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $data = $request->only(['nama_divisi', 'deskripsi']);

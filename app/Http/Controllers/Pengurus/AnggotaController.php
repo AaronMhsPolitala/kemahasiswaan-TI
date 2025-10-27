@@ -8,26 +8,59 @@ use App\Models\Pendaftaran;
 use App\Services\FonnteService; // Import FonnteService
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // Import Log
+use Illuminate\Support\Facades\Storage;
 
 class AnggotaController extends Controller
 {
-
     public function calonAnggota()
     {
-        $candidates = Pendaftaran::with('divisi')->whereNotIn('status', ['diterima', 'ditolak', 'Anggota Aktif', 'Rejected Stage 2'])->get();
+        $candidates = Pendaftaran::with('divisi')->whereNotIn('status', ['diterima', 'ditolak', 'Anggota Aktif', 'Gagal Wawancara', 'Lulus Wawancara'])->get();
+
         return view('pengurus.calon-anggota.index', compact('candidates'));
     }
 
-
-    public function calonAnggotaTahap1()
+    public function calonAnggotaTahap1(Request $request)
     {
-        $candidates = Pendaftaran::whereIn('status', ['diterima', 'ditolak'])->get();
-        return view('pengurus.calon-anggota-tahap-1.index', compact('candidates'));
+        $query = Pendaftaran::query()->with('divisi');
+
+        $query->whereIn('status', ['diterima', 'ditolak', 'Gagal Wawancara', 'Lulus Wawancara']);
+
+        // Search by name or NIM
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by division
+        if ($request->filled('divisi_id')) {
+            $query->where('divisi_id', $request->divisi_id);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $candidates = $query->paginate(10)->withQueryString();
+
+        $divisis = Divisi::all();
+        $statuses = [
+            'diterima' => 'Lolos ke Tahap 2',
+            'ditolak' => 'Ditolak (Administrasi)',
+            'Gagal Wawancara' => 'Gagal Wawancara',
+            'Lulus Wawancara' => 'Lulus Wawancara (Anggota)',
+        ];
+
+        return view('pengurus.calon-anggota-tahap-1.index', compact('candidates', 'divisis', 'statuses'));
     }
 
     public function calonAnggotaTahap2()
     {
         $candidates = Pendaftaran::where('status', 'diterima')->get();
+
         return view('pengurus.calon-anggota-tahap-2.index', compact('candidates'));
     }
 
@@ -37,26 +70,19 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $message = "Halo, {$pendaftaran->nama}
-Terima kasih telah mendaftar sebagai calon Pengurus HIMA-TI Politeknik Negeri Tanah Laut periode 2025/2026.
-
-Berdasarkan hasil seleksi administrasi, Anda dinyatakan lolos ke tahap wawancara.
-Mohon tetap semangat dan persiapkan diri dengan baik.
-
-Langkah selanjutnya:
-1. Bergabung ke grup informasi seleksi melalui tautan berikut:
-https://chat.whatsapp.com/HRWZs2tMXUP30Cc7x7aS1y?mode=ems_copy_c
-2. Jadwal wawancara dan panduannya akan disampaikan melalui grup tersebut.
-3. Pastikan selalu memantau informasi agar tidak ketinggalan jadwal.
-
-Terima kasih atas antusiasme Anda untuk menjadi bagian dari HIMA-TI Politala.
-– Departemen PSDM HIMA-TI Politala";
+        $template = Storage::disk('local')->get('wa_template_diterima.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
         $result = $fonnte->send($pendaftaran->hp, $message);
 
         if ($result['ok']) {
             return redirect()->back()->with('success', 'Calon diterima & notifikasi WhatsApp terkirim.');
         } else {
             Log::error('Fonnte Gagal Terkirim (Approve Pengurus)', ['response' => $result]);
+
             return redirect()->back()->with('warning', 'Calon diterima, tapi notifikasi WhatsApp gagal dikirim.');
         }
     }
@@ -67,27 +93,22 @@ Terima kasih atas antusiasme Anda untuk menjadi bagian dari HIMA-TI Politala.
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $message = "Halo, {$pendaftaran->nama}
-Terima kasih telah mengikuti proses pendaftaran calon Pengurus HIMA-TI Politeknik Negeri Tanah Laut periode 2025/2026.
-
-Berdasarkan hasil seleksi administrasi, saat ini Anda belum dapat melanjutkan ke tahap wawancara.
-Kami sangat menghargai waktu dan antusiasme Anda dalam mengikuti proses ini.
-
-Jangan berkecil hati, masih banyak kesempatan untuk berkontribusi dan terlibat dalam kegiatan HIMA-TI di masa mendatang.
-Kami berharap Anda tetap semangat dan terus aktif mengembangkan diri.
-
-Terima kasih telah menunjukkan minat untuk menjadi bagian dari HIMA-TI Politala.
-– Departemen PSDM HIMA-TI Politala";
+        $template = Storage::disk('local')->get('wa_template_ditolak.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
         $result = $fonnte->send($pendaftaran->hp, $message);
 
         if ($result['ok']) {
             return redirect()->back()->with('success', 'Calon ditolak & notifikasi WhatsApp terkirim.');
         } else {
             Log::error('Fonnte Gagal Terkirim (Reject Pengurus)', ['response' => $result]);
+
             return redirect()->back()->with('warning', 'Calon ditolak, tapi notifikasi WhatsApp gagal dikirim.');
         }
     }
-
 
     public function approveCandidateStage2(Pendaftaran $pendaftaran)
     {
@@ -115,18 +136,20 @@ Terima kasih telah menunjukkan minat untuk menjadi bagian dari HIMA-TI Politala.
 
     public function kelolaAnggotaHimati()
     {
-        $members = Pendaftaran::where('status', 'Anggota Aktif')->latest()->paginate(10);
+        $members = Pendaftaran::where('status', 'Lulus Wawancara')->latest()->paginate(10);
         $semua_divisi = Divisi::all();
+
         return view('pengurus.kelola-anggota-himati.index', compact('members', 'semua_divisi'));
     }
 
     public function anggotaPerDivisi(Divisi $divisi)
     {
-        $members = Pendaftaran::where('status', 'Anggota Aktif')
-                                ->where('divisi_id', $divisi->id)
-                                ->latest()
-                                ->paginate(10);
+        $members = Pendaftaran::where('status', 'Lulus Wawancara')
+            ->where('divisi_id', $divisi->id)
+            ->latest()
+            ->paginate(10);
         $semua_divisi = Divisi::all();
+
         return view('pengurus.kelola-anggota-himati.index', compact('members', 'divisi', 'semua_divisi'));
     }
 
@@ -137,9 +160,10 @@ Terima kasih telah menunjukkan minat untuk menjadi bagian dari HIMA-TI Politala.
             'nim' => 'required|string|max:255',
             'hp' => 'required|string|max:255',
             'divisi_id' => 'required|exists:divisis,id',
+            'jabatan' => 'required|string|in:Ketua Koordinator,Wakil Koordinator,Anggota Divisi',
         ]);
 
-        $anggotum->update($request->only(['name', 'nim', 'hp', 'divisi_id']));
+        $anggotum->update($request->only(['name', 'nim', 'hp', 'divisi_id', 'jabatan']));
 
         return redirect()->route('pengurus.kelola-anggota-himati.index')->with('success', 'Data anggota berhasil diperbarui.');
     }
@@ -147,6 +171,7 @@ Terima kasih telah menunjukkan minat untuk menjadi bagian dari HIMA-TI Politala.
     public function destroy(Pendaftaran $anggotum)
     {
         $anggotum->delete();
+
         return redirect()->route('pengurus.calon-anggota.index')->with('success', 'Calon anggota berhasil dihapus.');
     }
 }

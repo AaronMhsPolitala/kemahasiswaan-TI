@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,7 +37,7 @@ class AuthController extends Controller
             // Jika berhasil, login-kan user
             Auth::login($user);
             $request->session()->regenerate();
-            
+
             // Alihkan ke beranda user
             return redirect()->intended('/user/beranda');
         }
@@ -69,8 +70,8 @@ class AuthController extends Controller
         // Jika validasi gagal, kembali dengan error
         if ($validator->fails()) {
             return redirect('register')
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
 
         // Buat user baru

@@ -14,6 +14,8 @@ class Pendaftaran extends Model
         'divisi_id',
         'alasan_bergabung',
         'status',
+        'gambar',
+        'jabatan',
     ];
 
     public function divisi()

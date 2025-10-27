@@ -15,8 +15,8 @@ class PengaduanController extends Controller
 
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
-                $q->where('nim', 'like', '%' . $request->search . '%')
-                  ->orWhere('nama', 'like', '%' . $request->search . '%');
+                $q->where('nim', 'like', '%'.$request->search.'%')
+                    ->orWhere('nama', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -41,6 +41,7 @@ class PengaduanController extends Controller
     public function destroy(Pengaduan $mahasiswa_bermasalah)
     {
         $mahasiswa_bermasalah->delete();
+
         return redirect()->route('admin.mahasiswa-bermasalah.index')->with('success', 'Pengaduan berhasil dihapus.');
     }
 
@@ -69,7 +70,7 @@ class PengaduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required_if:anonim,false|string|max:255',
+            'nim' => 'required_if:anonim,false|numeric',
             'nama' => 'required_if:anonim,false|string|max:255',
             'semester' => 'required_if:anonim,false|integer|min:1',
             'jenis_masalah' => 'required|string|max:255',
@@ -77,7 +78,6 @@ class PengaduanController extends Controller
             'kontak_pengadu' => 'nullable|string|max:255',
             'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'anonim' => 'nullable|boolean',
-            'persetujuan' => 'required|accepted',
         ]);
 
         $data = $request->all();
@@ -97,6 +97,6 @@ class PengaduanController extends Controller
 
         Pengaduan::create($data);
 
-        return redirect()->route('user.bermasalah')->with('success', 'Pengaduan Anda telah berhasil dikirim. Kode tiket Anda adalah: ' . $data['kode_tiket']);
+        return redirect()->route('admin.mahasiswa-bermasalah.index')->with('success', 'Pengaduan berhasil ditambahkan.');
     }
 }

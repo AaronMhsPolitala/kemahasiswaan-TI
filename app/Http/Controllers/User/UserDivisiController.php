@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Divisi;
-use Illuminate\Http\Request;
 
 class UserDivisiController extends Controller
 {
     public function index()
     {
         $divisis = Divisi::all();
+
         return view('user.divisi', compact('divisis'));
     }
 
