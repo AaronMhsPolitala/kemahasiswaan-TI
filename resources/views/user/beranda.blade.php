@@ -5,7 +5,7 @@
 @section('content')
     <!-- Hero -->
     <section class="hero">
-        <h1>HIMPUNAN MAHASISWA<br>TEKNOLOGI INFORMASI D3</h1>
+        <h1>HIMPUNAN <br>TEKNOLOGI INFORMASI D3</h1> 
         <p>
             HMTI Politeknik Negeri Tanah Laut (POLITALA) adalah organisasi kemahasiswaan yang bergerak di bidang teknologi informasi
             dan berdasarkan semangat kolaborasi, inovasi, dan profesionalisme.
