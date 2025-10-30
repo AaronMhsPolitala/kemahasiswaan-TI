@@ -50,6 +50,6 @@
 
 @push('scripts')
 <script>
-    CKEDITOR.replace('deskripsi', { versionCheck: false });
+    CKEDITOR.replace('deskripsi', { removePlugins: 'elementspath', resize_enabled: false, versionCheck: false });
 </script>
 @endpush
