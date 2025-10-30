@@ -87,6 +87,7 @@
     #calon-anggota-page .modal-footer-buttons button { margin-left: 10px; padding: 10px 18px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
     #calon-anggota-page .btn-danger { background-color: var(--danger-color); color: white; }
     #calon-anggota-page .btn-success { background-color: #28a745; color: white; }
+    .btn-warning { background-color: #f97316; color: #fff; }
 
     .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
     .filter-bar input, .filter-bar select { padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid var(--border-color); }
@@ -119,8 +120,10 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
             <a href="{{ route('pengurus.calon-anggota-tahap-1.index') }}" class="btn btn-secondary">Reset</a>
+            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success">Export PDF</a>
+            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger">Export CSV</a>
         </form>
     </div>
 
@@ -229,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const imageView = page.querySelector('#view_gambar');
             if (data.gambar) {
-                imageView.src = `{{ asset('storage') }}/${data.gambar}`;
+                imageView.src = {{ asset('storage') }}/${data.gambar};
                 imageView.style.display = 'block';
             } else {
                 imageView.src = '';

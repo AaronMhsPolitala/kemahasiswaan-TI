@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pengaduan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use PDF;
 
 class PengaduanController extends Controller
 {
@@ -32,6 +33,48 @@ class PengaduanController extends Controller
 
         return view('admin.bermasalah.index', compact('pengaduans'));
     }
+
+    public function exportPdf()
+    {
+        $pengaduans = Pengaduan::all();
+        $pdf = PDF::loadView('admin.bermasalah.pdf', compact('pengaduans'));
+        return $pdf->download('laporan-mahasiswa-bermasalah.pdf');
+    }
+
+    public function exportCsv()
+    {
+        $pengaduans = Pengaduan::all();
+        $fileName = 'pengaduan.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('NIM', 'Nama', 'Jenis Masalah', 'Keterangan', 'Status');
+
+        $callback = function() use($pengaduans, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($pengaduans as $pengaduan) {
+                $row['NIM']  = $pengaduan->nim;
+                $row['Nama']    = $pengaduan->nama;
+                $row['Jenis Masalah']    = $pengaduan->jenis_masalah;
+                $row['Keterangan']  = $pengaduan->keterangan;
+                $row['Status']  = $pengaduan->status;
+
+                fputcsv($file, array($row['NIM'], $row['Nama'], $row['Jenis Masalah'], $row['Keterangan'], $row['Status']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 
     public function create()
     {

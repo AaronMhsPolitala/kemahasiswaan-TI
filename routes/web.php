@@ -55,10 +55,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('aspirasi/print', [AdminAspirasiController::class, 'printPdf'])->name('aspirasi.printPdf');
     Route::resource('aspirasi', AdminAspirasiController::class)->only(['index', 'show', 'destroy']);
     Route::resource('berita', AdminBeritaController::class);
+    Route::get('prestasi/export-pdf', [AdminPrestasiController::class, 'exportPdf'])->name('prestasi.exportPdf');
+    Route::get('prestasi/export-csv', [AdminPrestasiController::class, 'exportCsv'])->name('prestasi.exportCsv');
     Route::resource('prestasi', AdminPrestasiController::class);
     Route::resource('anggota', AdminAnggotaController::class);
     Route::resource('divisi', DivisiController::class);
     Route::resource('users', AdminUserController::class);
+    Route::get('mahasiswa-bermasalah/export-pdf', [AdminPengaduanController::class, 'exportPdf'])->name('mahasiswa-bermasalah.exportPdf');
+    Route::get('mahasiswa-bermasalah/export-csv', [AdminPengaduanController::class, 'exportCsv'])->name('mahasiswa-bermasalah.exportCsv');
     Route::resource('mahasiswa-bermasalah', AdminPengaduanController::class)->except([]);
 
     Route::get('/kelola-anggota-himati', [AdminAnggotaController::class, 'kelolaAnggotaHimati'])->name('kelola-anggota-himati.index');
@@ -66,6 +70,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/calon-anggota', [AdminAnggotaController::class, 'calonAnggota'])->name('calon-anggota.index');
     Route::post('calon-anggota/{pendaftaran}/approve', [AdminAnggotaController::class, 'approveCandidate'])->name('calon-anggota.approve');
     Route::post('calon-anggota/{pendaftaran}/reject', [AdminAnggotaController::class, 'rejectCandidate'])->name('calon-anggota.reject');
+    Route::get('/calon-anggota-tahap-1/export-csv', [AdminAnggotaController::class, 'exportCsvTahap1'])->name('calon-anggota-tahap-1.exportCsv');
+    Route::get('/calon-anggota-tahap-1/export-pdf', [AdminAnggotaController::class, 'exportPdfTahap1'])->name('calon-anggota-tahap-1.exportPdf');
     Route::get('/calon-anggota-tahap-1', [AdminAnggotaController::class, 'calonAnggotaTahap1'])->name('calon-anggota-tahap-1.index');
     Route::get('/calon-anggota-tahap-2', [AdminAnggotaController::class, 'calonAnggotaTahap2'])->name('calon-anggota-tahap-2.index');
     Route::post('calon-anggota/{pendaftaran}/pass-interview', [AdminAnggotaController::class, 'passInterview'])->name('calon-anggota.pass-interview');
@@ -84,6 +90,8 @@ Route::prefix('pengurus')->name('pengurus.')->group(function () {
     Route::get('aspirasi/print', [AspirasiController::class, 'printPdf'])->name('aspirasi.printPdf');
     Route::resource('aspirasi', AspirasiController::class)->only(['index', 'show', 'destroy']);
     Route::resource('berita', BeritaController::class);
+    Route::get('prestasi/export-pdf', [PrestasiController::class, 'exportPdf'])->name('prestasi.exportPdf');
+    Route::get('prestasi/export-csv', [PrestasiController::class, 'exportCsv'])->name('prestasi.exportCsv');
     Route::resource('prestasi', PrestasiController::class);
     Route::resource('divisi', PengurusDivisiController::class);
     Route::resource('users', PengurusUserController::class);
@@ -92,6 +100,8 @@ Route::prefix('pengurus')->name('pengurus.')->group(function () {
     Route::get('calon-anggota', [AnggotaController::class, 'calonAnggota'])->name('calon-anggota.index');
     Route::post('calon-anggota/{pendaftaran}/approve', [AnggotaController::class, 'approveCandidate'])->name('calon-anggota.approve');
     Route::post('calon-anggota/{pendaftaran}/reject', [AnggotaController::class, 'rejectCandidate'])->name('calon-anggota.reject');
+    Route::get('calon-anggota-tahap-1/export-csv', [AnggotaController::class, 'exportCsvTahap1'])->name('calon-anggota-tahap-1.exportCsv');
+    Route::get('calon-anggota-tahap-1/export-pdf', [AnggotaController::class, 'exportPdfTahap1'])->name('calon-anggota-tahap-1.exportPdf');
     Route::get('calon-anggota-tahap-1', [AnggotaController::class, 'calonAnggotaTahap1'])->name('calon-anggota-tahap-1.index');
     Route::get('calon-anggota-tahap-2', [AnggotaController::class, 'calonAnggotaTahap2'])->name('calon-anggota-tahap-2.index');
     Route::post('calon-anggota/{pendaftaran}/approve-stage-2', [AdminAnggotaController::class, 'approveCandidateStage2'])->name('calon-anggota.approve-stage-2');

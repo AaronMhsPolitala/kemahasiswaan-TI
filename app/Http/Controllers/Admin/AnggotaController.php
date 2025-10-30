@@ -9,6 +9,7 @@ use App\Services\FonnteService; // Import FonnteService
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // Import Log
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class AnggotaController extends Controller
 {
@@ -18,6 +19,48 @@ class AnggotaController extends Controller
 
         return view('admin.calon-anggota.index', compact('candidates'));
     }
+
+    public function exportCsvTahap1()
+    {
+        $candidates = Pendaftaran::whereIn('status', ['diterima', 'ditolak', 'Gagal Wawancara', 'Lulus Wawancara'])->get();
+        $fileName = 'calon-anggota-tahap-1.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Nama Lengkap', 'NIM', 'Nomor HP', 'Divisi Tujuan', 'Status');
+
+        $callback = function() use($candidates, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($candidates as $candidate) {
+                $row['Nama Lengkap']  = $candidate->name;
+                $row['NIM']    = $candidate->nim;
+                $row['Nomor HP']    = $candidate->hp;
+                $row['Divisi Tujuan']  = $candidate->divisi->nama_divisi;
+                $row['Status']  = $candidate->status;
+
+                fputcsv($file, array($row['Nama Lengkap'], $row['NIM'], $row['Nomor HP'], $row['Divisi Tujuan'], $row['Status']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportPdfTahap1()
+    {
+        $candidates = Pendaftaran::whereIn('status', ['diterima', 'ditolak', 'Gagal Wawancara', 'Lulus Wawancara'])->get();
+        $pdf = PDF::loadView('admin.calon-anggota-tahap-1.pdf', compact('candidates'));
+        return $pdf->download('laporan-calon-anggota-tahap-1.pdf');
+    }
+
 
     public function calonAnggotaTahap1(Request $request)
     {

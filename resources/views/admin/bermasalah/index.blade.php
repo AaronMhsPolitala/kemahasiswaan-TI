@@ -23,7 +23,9 @@
     .btn-primary { background-color: var(--primary-color); color: #fff; }
     .btn-edit { background-color: #f97316; color: #fff; }
     .btn-danger { background-color: var(--danger-color); color: #fff; }
-    .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .btn-success { background-color: var(--success-color); color: #fff; }
+    .btn-warning { background-color: #f97316; color: #fff; }
+    .filter-bar { display: flex; gap: 1rem; margin-bottom: 2.5rem; align-items: center; }
     .filter-bar input, .filter-bar select { padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid var(--border-color); }
     .alert { padding: 1rem; margin-bottom: 1.5rem; border-radius: 0.375rem; }
     .alert-success { background-color: #dcfce7; color: #166534; }
@@ -40,9 +42,13 @@
 
 @section('content')
 <div id="bermasalah-page">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center my-4" style="margin-bottom: 1.5rem;">
         <h1>Data Mahasiswa Bermasalah</h1>
-        <a href="{{ route('admin.mahasiswa-bermasalah.create') }}" class="btn btn-primary">Tambah Data</a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.mahasiswa-bermasalah.create') }}" class="btn btn-primary">Tambah Data</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportPdf') }}" class="btn btn-success">Export PDF</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -66,7 +72,7 @@
                 <option value="ditanggapi" {{ request('status') == 'ditanggapi' ? 'selected' : '' }}>Ditanggapi</option>
                 <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
             </select>
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
         </form>
     </div>
 
@@ -112,6 +118,8 @@
     <div class="mt-4">
         {{ $pengaduans->links() }}
     </div>
+
+
 
     <!-- View Modal -->
     <div id="viewModal" class="modal">
@@ -167,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('view_jenis_masalah').textContent = pengaduan.jenis_masalah;
             document.getElementById('view_keterangan').textContent = pengaduan.keterangan;
             document.getElementById('view_kontak_pengadu').textContent = pengaduan.kontak_pengadu ?? 'N/A';
-            document.getElementById('view_lampiran').innerHTML = pengaduan.lampiran ? `<a href="/storage/${pengaduan.lampiran}" target="_blank">Lihat Lampiran</a>` : 'Tidak ada';
+            document.getElementById('view_lampiran').innerHTML = pengaduan.lampiran ? <a href="/storage/${pengaduan.lampiran}" target="_blank">Lihat Lampiran</a> : 'Tidak ada';
             document.getElementById('view_status').textContent = pengaduan.status;
             viewModal.style.display = 'block';
         });
@@ -176,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function () {
             const pengaduanId = this.dataset.id;
-            formToSubmit = document.getElementById(`delete-form-${pengaduanId}`);
+            formToSubmit = document.getElementById(delete-form-${pengaduanId});
             deleteModal.style.display = 'block';
         });
     });
@@ -201,6 +209,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (event.target == deleteModal) {
             deleteModal.style.display = 'none';
+        }
+    });
+
+    const importModal = document.getElementById('importModal');
+    document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const target = this.dataset.target;
+            document.querySelector(target).style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.btn-close').forEach(button => {
+        button.addEventListener('click', function () {
+            this.closest('.modal').style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
         }
     });
 });

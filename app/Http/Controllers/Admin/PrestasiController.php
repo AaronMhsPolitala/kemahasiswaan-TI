@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use PDF;
 
 class PrestasiController extends Controller
 {
@@ -61,6 +62,51 @@ class PrestasiController extends Controller
 
         return view('admin.prestasi.index', compact('prestasis', 'tingkat_kegiatans', 'keterangans'));
     }
+
+    public function exportPdf()
+    {
+        $prestasis = Prestasi::all();
+        $pdf = PDF::loadView('admin.prestasi.pdf', compact('prestasis'));
+        return $pdf->download('laporan-prestasi.pdf');
+    }
+
+    public function exportCsv()
+    {
+        $prestasis = Prestasi::all();
+        $fileName = 'prestasi.csv';
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('NIM', 'Nama Mahasiswa', 'IPK', 'Nama Kegiatan', 'Waktu Penyelenggaraan', 'Tingkat Kegiatan', 'Prestasi yang Dicapai', 'Keterangan');
+
+        $callback = function() use($prestasis, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($prestasis as $prestasi) {
+                $row['NIM']  = $prestasi->nim;
+                $row['Nama Mahasiswa']    = $prestasi->nama_mahasiswa;
+                $row['IPK']    = $prestasi->ipk;
+                $row['Nama Kegiatan']  = $prestasi->nama_kegiatan;
+                $row['Waktu Penyelenggaraan']  = $prestasi->waktu_penyelenggaraan;
+                $row['Tingkat Kegiatan']  = $prestasi->tingkat_kegiatan;
+                $row['Prestasi yang Dicapai']  = $prestasi->prestasi_yang_dicapai;
+                $row['Keterangan']  = $prestasi->keterangan;
+
+                fputcsv($file, array($row['NIM'], $row['Nama Mahasiswa'], $row['IPK'], $row['Nama Kegiatan'], $row['Waktu Penyelenggaraan'], $row['Tingkat Kegiatan'], $row['Prestasi yang Dicapai'], $row['Keterangan']));
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 
     /**
      * Show the form for creating a new resource.

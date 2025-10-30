@@ -24,7 +24,6 @@ class PengaturanController extends Controller
         $request->validate([
             'pesan_diterima' => 'required|string',
             'pesan_ditolak' => 'required|string',
-            'pesan_diterima_tahap2' => 'required|string',
             'pesan_lolos_wawancara' => 'required|string',
             'pesan_gagal_wawancara' => 'required|string',
         ]);

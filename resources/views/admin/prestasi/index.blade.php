@@ -23,7 +23,9 @@
     .btn-primary { background-color: var(--primary-color); color: #fff; }
     .btn-edit { background-color: #f97316; color: #fff; }
     .btn-danger { background-color: var(--danger-color); color: #fff; }
-    .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .btn-success { background-color: var(--success-color); color: #fff; }
+    .btn-warning { background-color: #f97316; color: #fff; }
+    .filter-bar { display: flex; gap: 1rem; margin-bottom: 2.5rem; align-items: center; }
     .filter-bar input, .filter-bar select { padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid var(--border-color); }
     .alert { padding: 1rem; margin-bottom: 1.5rem; border-radius: 0.375rem; }
     .alert-success { background-color: #dcfce7; color: #166534; }
@@ -35,9 +37,13 @@
 
 @section('content')
 <div id="prestasi-page">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center my-4" style="margin-bottom: 1.5rem;">
         <h1>Data Prestasi Mahasiswa</h1>
-        <a href="{{ route('admin.prestasi.create') }}" class="btn btn-primary">Tambah Data</a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.prestasi.create') }}" class="btn btn-primary">Tambah Data</a>
+            <a href="{{ route('admin.prestasi.exportPdf') }}" class="btn btn-success">Export PDF</a>
+            <a href="{{ route('admin.prestasi.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+        </div>
     </div>
 
     @if(session('success'))
@@ -59,7 +65,7 @@
                     <option value="{{ $keterangan }}" {{ request('keterangan') == $keterangan ? 'selected' : '' }}>{{ $keterangan }}</option>
                 @endforeach
             </select>
-            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
         </form>
     </div>
 
@@ -111,6 +117,8 @@
         {{ $prestasis->links() }}
     </div>
 
+
+
     <!-- Delete Confirmation Modal -->
     <div id="deleteModal" class="modal">
         <div class="modal-content">
@@ -136,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function () {
             const prestasiId = this.dataset.id;
-            formToSubmit = document.getElementById(`delete-form-${prestasiId}`);
+            formToSubmit = document.getElementById(delete-form-${prestasiId});
             deleteModal.style.display = 'block';
         });
     });
@@ -154,6 +162,27 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('click', (event) => {
         if (event.target == deleteModal) {
             deleteModal.style.display = 'none';
+        }
+    });
+
+    const importModal = document.getElementById('importModal');
+    document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const target = this.dataset.target;
+            document.querySelector(target).style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('.btn-close').forEach(button => {
+        button.addEventListener('click', function () {
+            this.closest('.modal').style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
         }
     });
 });
