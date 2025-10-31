@@ -151,6 +151,11 @@
         </div>
 
         <div class="mb-3">
+          <label for="password_confirmation" class="form-label">Ulangi Kata Sandi</label>
+          <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+        </div>
+
+        <div class="mb-3">
           <label for="no_wa" class="form-label">No. WhatsApp</label>
           <input type="text" class="form-control" id="no_wa" name="no_wa" value="{{ old('no_wa') }}" required>
         </div>
