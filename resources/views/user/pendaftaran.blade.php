@@ -91,6 +91,17 @@
         @endif
     @endguest
 
+    @auth
+        @if(Auth::user()->role === 'admin' || Auth::user()->role === 'pengurus')
+            <div class="login-required-overlay">
+                <div class="login-required-message">
+                    <h4>Anda sudah menjadi {{ Auth::user()->role }}</h4>
+                    <p>Anda tidak perlu mendaftar lagi.</p>
+                </div>
+            </div>
+        @endif
+    @endauth
+
     {{-- Konten formulir pendaftaran --}}
     <div class="pendaftaran-header">
         <h4>Formulir Pendaftaran Pengurus HIMA TI</h4>
