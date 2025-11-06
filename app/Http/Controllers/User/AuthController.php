@@ -29,16 +29,12 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Cari user berdasarkan email
-        $user = User::where('email', $credentials['email'])->first();
-
-        // Cek user dan bandingkan password (plain text)
-        if ($user && $user->password === $credentials['password']) {
-            // Jika berhasil, login-kan user
-            Auth::login($user);
+        // Coba otentikasi pengguna
+        if (Auth::attempt($credentials)) {
+            // Jika berhasil, buat ulang sesi
             $request->session()->regenerate();
 
-            // Alihkan ke beranda user
+            // Alihkan ke halaman yang dituju atau beranda user
             return redirect()->intended('/user/beranda');
         }
 

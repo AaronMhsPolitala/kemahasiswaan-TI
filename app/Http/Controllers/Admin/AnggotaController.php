@@ -195,9 +195,10 @@ class AnggotaController extends Controller
             'nim' => 'required|string|max:255',
             'hp' => 'required|string|max:255',
             'divisi_id' => 'required|exists:divisis,id',
+            'jabatan' => 'required|string|in:Ketua Koordinator,Wakil Koordinator,Anggota Divisi',
         ]);
 
-        $anggotum->update($request->only(['name', 'nim', 'hp', 'divisi_id']));
+        $anggotum->update($request->only(['name', 'nim', 'hp', 'divisi_id', 'jabatan']));
 
         return redirect()->route('admin.kelola-anggota-himati.index')->with('success', 'Data anggota berhasil diperbarui.');
     }

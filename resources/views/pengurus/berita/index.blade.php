@@ -29,7 +29,7 @@
             <tbody>
                 @forelse($beritas as $berita)
                     <tr>
-                        <td><img src="{{ asset('storage/' . $berita->foto_berita) }}" alt="Foto Berita" width="100"></td>
+                        <td><img src="{{ asset('storage/' . $berita->foto_berita) }}" alt="Foto Berita" style="width: 100px; height: 60px; object-fit: cover;"></td>
                         <td>{{ $berita->judul_berita }}</td>
                         <td style="max-width:320px">{{ Str::limit(strip_tags(html_entity_decode($berita->deskripsi)), 60) }}</td>
                         <td>{{ $berita->created_at->format('d M Y H:i') }}</td>

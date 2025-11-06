@@ -216,6 +216,8 @@
 
 @push('scripts')
 <script>
+    const STORAGE_URL = '{{ asset('storage') }}';
+
 document.addEventListener('DOMContentLoaded', function() {
     const page = document.getElementById('calon-anggota-page');
     if (!page) return;
@@ -232,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const imageView = page.querySelector('#view_gambar');
             if (data.gambar) {
-                imageView.src = {{ asset('storage') }}/${data.gambar};
+                imageView.src = `${STORAGE_URL}/${data.gambar}`;
                 imageView.style.display = 'block';
             } else {
                 imageView.src = '';
