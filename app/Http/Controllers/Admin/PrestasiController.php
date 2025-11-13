@@ -40,7 +40,7 @@ class PrestasiController extends Controller
         // Get all matching results
         $allPrestasis = $query->get();
 
-        // Sort by SAW score
+        // Sort by SAW score (accessor total_skor di Model)
         $sortedPrestasis = $allPrestasis->sortByDesc('total_skor');
 
         // Manual Pagination
@@ -65,14 +65,18 @@ class PrestasiController extends Controller
 
     public function exportPdf()
     {
-        $prestasis = Prestasi::all();
+        // Urutkan juga berdasarkan SAW
+        $prestasis = Prestasi::all()->sortByDesc('total_skor');
+
         $pdf = PDF::loadView('admin.prestasi.pdf', compact('prestasis'));
         return $pdf->download('laporan-prestasi.pdf');
     }
 
     public function exportCsv()
     {
-        $prestasis = Prestasi::all();
+        // Urutkan juga berdasarkan SAW
+        $prestasis = Prestasi::all()->sortByDesc('total_skor');
+
         $fileName = 'prestasi.csv';
         $headers = array(
             "Content-type"        => "text/csv",
@@ -82,23 +86,42 @@ class PrestasiController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('NIM', 'Nama Mahasiswa', 'IPK', 'Nama Kegiatan', 'Waktu Penyelenggaraan', 'Tingkat Kegiatan', 'Prestasi yang Dicapai', 'Keterangan');
+        $columns = array(
+            'NIM',
+            'Nama Mahasiswa',
+            'IPK',
+            'Nama Kegiatan',
+            'Waktu Penyelenggaraan',
+            'Tingkat Kegiatan',
+            'Prestasi yang Dicapai',
+            'Keterangan'
+            // Kalau mau tambah: 'Total Skor SAW'
+        );
 
-        $callback = function() use($prestasis, $columns) {
+        $callback = function() use ($prestasis, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($prestasis as $prestasi) {
-                $row['NIM']  = $prestasi->nim;
-                $row['Nama Mahasiswa']    = $prestasi->nama_mahasiswa;
-                $row['IPK']    = $prestasi->ipk;
-                $row['Nama Kegiatan']  = $prestasi->nama_kegiatan;
+                $row['NIM']                    = $prestasi->nim;
+                $row['Nama Mahasiswa']         = $prestasi->nama_mahasiswa;
+                $row['IPK']                    = $prestasi->ipk;
+                $row['Nama Kegiatan']          = $prestasi->nama_kegiatan;
                 $row['Waktu Penyelenggaraan']  = $prestasi->waktu_penyelenggaraan;
-                $row['Tingkat Kegiatan']  = $prestasi->tingkat_kegiatan;
+                $row['Tingkat Kegiatan']       = $prestasi->tingkat_kegiatan;
                 $row['Prestasi yang Dicapai']  = $prestasi->prestasi_yang_dicapai;
-                $row['Keterangan']  = $prestasi->keterangan;
+                $row['Keterangan']             = $prestasi->keterangan;
 
-                fputcsv($file, array($row['NIM'], $row['Nama Mahasiswa'], $row['IPK'], $row['Nama Kegiatan'], $row['Waktu Penyelenggaraan'], $row['Tingkat Kegiatan'], $row['Prestasi yang Dicapai'], $row['Keterangan']));
+                fputcsv($file, [
+                    $row['NIM'],
+                    $row['Nama Mahasiswa'],
+                    $row['IPK'],
+                    $row['Nama Kegiatan'],
+                    $row['Waktu Penyelenggaraan'],
+                    $row['Tingkat Kegiatan'],
+                    $row['Prestasi yang Dicapai'],
+                    $row['Keterangan'],
+                ]);
             }
 
             fclose($file);
@@ -106,7 +129,6 @@ class PrestasiController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -130,7 +152,10 @@ class PrestasiController extends Controller
             'ipk' => 'required|numeric|between:0,4.00',
             'nama_kegiatan' => 'required|string|max:255',
             'waktu_penyelenggaraan' => 'required|date',
-            'tingkat_kegiatan' => ['required', Rule::in(['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'])],
+            'tingkat_kegiatan' => [
+                'required',
+                Rule::in(['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'])
+            ],
             'prestasi_yang_dicapai' => 'required|string|max:255',
             'keterangan' => ['required', Rule::in(['Akademik', 'Non-Akademik'])],
             'bukti_prestasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -177,7 +202,10 @@ class PrestasiController extends Controller
             'ipk' => 'required|numeric|between:0,4.00',
             'nama_kegiatan' => 'required|string|max:255',
             'waktu_penyelenggaraan' => 'required|date',
-            'tingkat_kegiatan' => ['required', Rule::in(['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'])],
+            'tingkat_kegiatan' => [
+                'required',
+                Rule::in(['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'])
+            ],
             'prestasi_yang_dicapai' => 'required|string|max:255',
             'keterangan' => ['required', Rule::in(['Akademik', 'Non-Akademik'])],
             'bukti_prestasi' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',

@@ -28,7 +28,7 @@ use App\Http\Controllers\User\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('user.beranda');
 });
 
 // --- AWAL PENAMBAHAN ROUTE OTENTIKASI ---

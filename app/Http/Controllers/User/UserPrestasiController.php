@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Prestasi;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class UserPrestasiController extends Controller
 {
@@ -31,24 +32,18 @@ class UserPrestasiController extends Controller
             $query->where('keterangan', $request->keterangan);
         }
 
-        // Get all matching results
+        // Get all matching results, then sort by the accessor
         $allPrestasis = $query->get();
-
-        // Sort by SAW score
         $sortedPrestasis = $allPrestasis->sortByDesc('total_skor');
 
-        // Manual Pagination
-        $page = $request->get('page', 1);
+        // Manually create a paginator
+        $page = Paginator::resolveCurrentPage('page');
         $perPage = 10;
-        $offset = ($page * $perPage) - $perPage;
-
-        $prestasis = new LengthAwarePaginator(
-            $sortedPrestasis->slice($offset, $perPage),
-            $sortedPrestasis->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        $currentPagePrestasis = $sortedPrestasis->slice(($page - 1) * $perPage, $perPage)->all();
+        $prestasis = new LengthAwarePaginator($currentPagePrestasis, $sortedPrestasis->count(), $perPage, $page, [
+            'path' => Paginator::resolveCurrentPath(),
+            'pageName' => 'page',
+        ]);
 
         // Data for filters
         $tingkat_kegiatans = ['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'];
