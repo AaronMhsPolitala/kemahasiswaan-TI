@@ -65,14 +65,17 @@ class PrestasiController extends Controller
 
     public function exportPdf()
     {
-        $prestasis = Prestasi::all();
+        // Urutkan juga berdasarkan SAW
+        $prestasis = Prestasi::all()->sortByDesc('total_skor');
         $pdf = PDF::loadView('pengurus.prestasi.pdf', compact('prestasis'));
         return $pdf->download('laporan-prestasi.pdf');
     }
 
     public function exportCsv()
     {
-        $prestasis = Prestasi::all();
+        // Urutkan juga berdasarkan SAW
+        $prestasis = Prestasi::all()->sortByDesc('total_skor');
+
         $fileName = 'prestasi.csv';
         $headers = array(
             "Content-type"        => "text/csv",
@@ -82,23 +85,44 @@ class PrestasiController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('NIM', 'Nama Mahasiswa', 'IPK', 'Nama Kegiatan', 'Waktu Penyelenggaraan', 'Tingkat Kegiatan', 'Prestasi yang Dicapai', 'Keterangan');
+        $columns = array(
+            'NIM',
+            'Nama Mahasiswa',
+            'IPK',
+            'Nama Kegiatan',
+            'Waktu Penyelenggaraan',
+            'Tingkat Kegiatan',
+            'Prestasi yang Dicapai',
+            'Keterangan',
+            'Total Skor SAW'
+        );
 
-        $callback = function() use($prestasis, $columns) {
+        $callback = function() use ($prestasis, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($prestasis as $prestasi) {
-                $row['NIM']  = $prestasi->nim;
-                $row['Nama Mahasiswa']    = $prestasi->nama_mahasiswa;
-                $row['IPK']    = $prestasi->ipk;
-                $row['Nama Kegiatan']  = $prestasi->nama_kegiatan;
+                $row['NIM']                    = $prestasi->nim;
+                $row['Nama Mahasiswa']         = $prestasi->nama_mahasiswa;
+                $row['IPK']                    = $prestasi->ipk;
+                $row['Nama Kegiatan']          = $prestasi->nama_kegiatan;
                 $row['Waktu Penyelenggaraan']  = $prestasi->waktu_penyelenggaraan;
-                $row['Tingkat Kegiatan']  = $prestasi->tingkat_kegiatan;
+                $row['Tingkat Kegiatan']       = $prestasi->tingkat_kegiatan;
                 $row['Prestasi yang Dicapai']  = $prestasi->prestasi_yang_dicapai;
-                $row['Keterangan']  = $prestasi->keterangan;
+                $row['Keterangan']             = $prestasi->keterangan;
+                $row['Total Skor SAW']         = $prestasi->total_skor;
 
-                fputcsv($file, array($row['NIM'], $row['Nama Mahasiswa'], $row['IPK'], $row['Nama Kegiatan'], $row['Waktu Penyelenggaraan'], $row['Tingkat Kegiatan'], $row['Prestasi yang Dicapai'], $row['Keterangan']));
+                fputcsv($file, [
+                    $row['NIM'],
+                    $row['Nama Mahasiswa'],
+                    $row['IPK'],
+                    $row['Nama Kegiatan'],
+                    $row['Waktu Penyelenggaraan'],
+                    $row['Tingkat Kegiatan'],
+                    $row['Prestasi yang Dicapai'],
+                    $row['Keterangan'],
+                    $row['Total Skor SAW'],
+                ]);
             }
 
             fclose($file);
