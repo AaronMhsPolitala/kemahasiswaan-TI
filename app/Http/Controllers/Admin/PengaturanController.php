@@ -30,7 +30,6 @@ class PengaturanController extends Controller
 
         Storage::disk('local')->put('wa_template_diterima.txt', $request->pesan_diterima);
         Storage::disk('local')->put('wa_template_ditolak.txt', $request->pesan_ditolak);
-        Storage::disk('local')->put('wa_template_diterima_tahap2.txt', $request->pesan_diterima_tahap2);
         Storage::disk('local')->put('wa_template_lolos_wawancara.txt', $request->pesan_lolos_wawancara);
         Storage::disk('local')->put('wa_template_gagal_wawancara.txt', $request->pesan_gagal_wawancara);
 
