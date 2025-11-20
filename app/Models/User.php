@@ -24,6 +24,7 @@ class User extends Authenticatable
         'no_wa',
         'role', // Tambahkan 'role' ke fillable
         'avatar',
+        'google_id',
     ];
 
     protected $hidden = [
