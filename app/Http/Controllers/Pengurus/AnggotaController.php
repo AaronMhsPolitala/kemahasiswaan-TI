@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pengurus;
 use App\Http\Controllers\Controller;
 use App\Models\Divisi;
 use App\Models\Pendaftaran;
+use App\Rules\JabatanRule;
 use App\Services\FonnteService; // Import FonnteService
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // Import Log
@@ -203,7 +204,7 @@ class AnggotaController extends Controller
             'nim' => 'required|string|max:255',
             'hp' => 'required|string|max:255',
             'divisi_id' => 'required|exists:divisis,id',
-            'jabatan' => 'required|string|in:Ketua Koordinator,Wakil Koordinator,Anggota Divisi',
+            'jabatan' => ['required', 'string', 'in:Ketua Koordinator,Wakil Koordinator,Anggota Divisi', new JabatanRule($request->divisi_id, $request->jabatan, $anggotum->id)],
         ]);
 
         $anggotum->update($request->only(['name', 'nim', 'hp', 'divisi_id', 'jabatan']));
