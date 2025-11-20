@@ -47,6 +47,21 @@
         </div>
     @endif
 
+    @if ($errors->any())
+        <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem;">
+            @if ($errors->has('jabatan'))
+                {{ $errors->first('jabatan') }}
+            @else
+                <strong>Oops! Terjadi kesalahan:</strong>
+                <ul style="margin-top: 0.5rem; list-style-type: disc; padding-left: 1.5rem;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            @endif
+        </div>
+    @endif
+
     <section class="table-container">
         <table class="data-table">
             <thead>

@@ -42,6 +42,6 @@ class JabatanRule implements Rule
 
     public function message()
     {
-        return 'Jabatan ini sudah terisi.';
+        return 'Maaf, jabatan wakil atau ketua sudah terisi.';
     }
 }
