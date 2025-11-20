@@ -34,6 +34,11 @@
           {{ session('success') }}
       </div>
   @endif
+  @if(session('error'))
+      <div class="alert alert-danger" style="background-color: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem;">
+          {{ session('error') }}
+      </div>
+  @endif
   @if($errors->any())
       <div class="alert alert-danger" style="background-color: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem;">
           <ul class="mb-0" style="padding-left: 1.2rem;">
@@ -67,8 +72,10 @@
           <td>
             <div style="display: flex; gap: 6px;">
                 <button class="btn-blue btn-lihat" data-id="{{ $user->id }}">Lihat</button>
-                <button class="btn-yellow btn-edit" data-id="{{ $user->id }}">Edit</button>
-                <button class="btn-red btn-hapus" data-id="{{ $user->id }}">Hapus</button>
+                @if($user->role !== 'admin')
+                    <button class="btn-yellow btn-edit" data-id="{{ $user->id }}">Edit</button>
+                    <button class="btn-red btn-hapus" data-id="{{ $user->id }}">Hapus</button>
+                @endif
             </div>
           </td>
         </tr>
@@ -124,7 +131,6 @@
         <div class="form-group">
             <label for="edit_role">Role</label>
             <select id="edit_role" name="role" class="form-control" required>
-            <option value="admin">Admin</option>
             <option value="pengurus">Pengurus</option>
             <option value="user">User</option>
             </select>

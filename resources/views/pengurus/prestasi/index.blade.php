@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function () {
             const prestasiId = this.dataset.id;
-            formToSubmit = document.getElementById(delete-form-${prestasiId});
+            formToSubmit = document.getElementById(`delete-form-${prestasiId}`);
             deleteModal.style.display = 'block';
         });
     });

@@ -130,7 +130,6 @@
             </div>
             <div class="modal-body">
                 <div class="info-grid">
-                    <strong>Kode Tiket:</strong> <span id="view_kode_tiket"></span>
                     <strong>NIM:</strong> <span id="view_nim"></span>
                     <strong>Nama:</strong> <span id="view_nama"></span>
                     <strong>Semester:</strong> <span id="view_semester"></span>
@@ -150,6 +149,7 @@
             <h3>Konfirmasi Hapus</h3>
             <p>Apakah Anda yakin ingin menghapus data ini?</p>
             <div class="modal-footer">
+                <button type="button" id="cancelDelete" class="btn" style="background-color: #ccc;">Batal</button>
                 <button type="button" id="confirmDelete" class="btn btn-danger">Hapus</button>
             </div>
         </div>
@@ -163,19 +163,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const viewModal = document.getElementById('viewModal');
     const deleteModal = document.getElementById('deleteModal');
     const confirmDelete = document.getElementById('confirmDelete');
+    const cancelDelete = document.getElementById('cancelDelete');
     let formToSubmit;
 
     document.querySelectorAll('.view-btn').forEach(button => {
         button.addEventListener('click', function () {
             const pengaduan = JSON.parse(this.dataset.pengaduan);
-            document.getElementById('view_kode_tiket').textContent = pengaduan.kode_tiket;
             document.getElementById('view_nim').textContent = pengaduan.nim ?? 'Anonim';
             document.getElementById('view_nama').textContent = pengaduan.nama ?? 'Anonim';
             document.getElementById('view_semester').textContent = pengaduan.semester ?? 'N/A';
             document.getElementById('view_jenis_masalah').textContent = pengaduan.jenis_masalah;
             document.getElementById('view_keterangan').textContent = pengaduan.keterangan;
             document.getElementById('view_kontak_pengadu').textContent = pengaduan.kontak_pengadu ?? 'N/A';
-            document.getElementById('view_lampiran').innerHTML = pengaduan.lampiran ? <a href="/storage/${pengaduan.lampiran}" target="_blank">Lihat Lampiran</a> : 'Tidak ada';
+            document.getElementById('view_lampiran').innerHTML = pengaduan.lampiran ? `<a href="/storage/${pengaduan.lampiran}" target="_blank">Lihat Lampiran</a>` : 'Tidak ada';
             document.getElementById('view_status').textContent = pengaduan.status;
             viewModal.style.display = 'block';
         });
@@ -184,12 +184,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', function () {
             const pengaduanId = this.dataset.id;
-            formToSubmit = document.getElementById(delete-form-${pengaduanId});
+            formToSubmit = document.getElementById(`delete-form-${pengaduanId}`);
             deleteModal.style.display = 'block';
         });
     });
 
-
+    cancelDelete.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+    });
 
     confirmDelete.addEventListener('click', () => {
         if (formToSubmit) {

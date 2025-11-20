@@ -57,11 +57,17 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // 1. Prevent 'pengurus' from editing 'admin'
+        if ($user->role === 'admin') {
+            return redirect()->route('pengurus.users.index')->with('error', 'Anda tidak memiliki izin untuk mengedit admin.');
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'no_wa' => 'nullable|string|max:20',
-            'role' => 'required|in:admin,pengurus,user',
+            // 2. Restrict role assignment
+            'role' => 'required|in:pengurus,user',
         ]);
 
         if ($validator->fails()) {
