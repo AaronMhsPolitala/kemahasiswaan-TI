@@ -27,13 +27,16 @@ class UserPendaftaranController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|numeric',
-            'hp' => 'required|numeric',
+            'nim' => 'required|numeric|unique:pendaftarans,nim',
+            'hp' => 'required|numeric|unique:pendaftarans,hp',
             'divisi_id' => 'required|exists:divisis,id',
             'alasan' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'nim.numeric' => 'NIM harus berupa angka.',
+            'nim.unique' => 'NIM ini sudah terdaftar.',
+            'hp.numeric' => 'Nomor HP harus berupa angka.',
+            'hp.unique' => 'Nomor HP ini sudah terdaftar.',
         ]);
 
         $gambarPath = null;
