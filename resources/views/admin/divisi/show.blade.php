@@ -20,7 +20,7 @@
         <hr class="divisi-divider">
         <div class="divisi-deskripsi">
             <strong class="info-label">Deskripsi:</strong>
-            <p>{{ $divisi->deskripsi }}</p>
+            {!! $divisi->deskripsi !!}
         </div>
     </div>
     <div class="card-footer">

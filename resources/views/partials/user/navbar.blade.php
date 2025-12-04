@@ -4,14 +4,14 @@
 
     <nav>
         <ul>
-            <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ route('user.beranda') }}">HOME</a></li>
-            <li class="{{ request()->is('divisi*') ? 'active' : '' }}"><a href="{{ route('user.divisi') }}">DIVISI</a></li>
-            <li class="{{ request()->is('profil') ? 'active' : '' }}"><a href="{{ route('user.profil') }}">PROFIL</a></li>
-            <li class="{{ request()->is('berita*') ? 'active' : '' }}"><a href="{{ route('user.berita') }}">BERITA</a></li>
-            <li class="{{ request()->is('pendaftaran') ? 'active' : '' }}"><a href="{{ route('user.pendaftaran') }}">PENDAFTARAN</a></li>
-            <li class="{{ request()->is('prestasi') ? 'active' : '' }}"><a href="{{ route('user.prestasi') }}">PRESTASI MAHASISWA</a></li>
-            <li class="{{ request()->is('bermasalah') ? 'active' : '' }}"><a href="{{ route('user.bermasalah') }}">PENGADUAN</a></li>
-            <li class="{{ request()->is('aspirasi') ? 'active' : '' }}"><a href="{{ route('user.aspirasi') }}">KOTAK ASPIRASI</a></li>
+            <li class="{{ request()->is('/') || request()->is('user/beranda') ? 'active' : '' }}"><a href="{{ route('user.beranda') }}">HOME</a></li>
+            <li class="{{ request()->is('user/divisi*') ? 'active' : '' }}"><a href="{{ route('user.divisi') }}">DIVISI</a></li>
+            <li class="{{ request()->is('user/profil*') ? 'active' : '' }}"><a href="{{ route('user.profil') }}">PROFIL</a></li>
+            <li class="{{ request()->is('user/berita*') ? 'active' : '' }}"><a href="{{ route('user.berita') }}">BERITA</a></li>
+            <li class="{{ request()->is('user/pendaftaran') ? 'active' : '' }}"><a href="{{ route('user.pendaftaran') }}">PENDAFTARAN</a></li>
+            <li class="{{ request()->is('user/prestasi') ? 'active' : '' }}"><a href="{{ route('user.prestasi') }}">PRESTASI MAHASISWA</a></li>
+            <li class="{{ request()->is('user/bermasalah') ? 'active' : '' }}"><a href="{{ route('user.bermasalah') }}">PENGADUAN</a></li>
+            <li class="{{ request()->is('user/aspirasi') ? 'active' : '' }}"><a href="{{ route('user.aspirasi') }}">KOTAK ASPIRASI</a></li>
         </ul>
     </nav>
 

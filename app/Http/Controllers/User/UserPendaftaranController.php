@@ -14,8 +14,10 @@ class UserPendaftaranController extends Controller
     {
         $divisis = Divisi::all();
         $registrationStatus = Setting::where('key', 'pendaftaran')->first();
+        $activePeriodSetting = Setting::where('key', 'active_period')->first();
+        $activePeriod = $activePeriodSetting ? $activePeriodSetting->value : '';
 
-        return view('user.pendaftaran', compact('divisis', 'registrationStatus'));
+        return view('user.pendaftaran', compact('divisis', 'registrationStatus', 'activePeriod'));
     }
 
     public function store(Request $request)

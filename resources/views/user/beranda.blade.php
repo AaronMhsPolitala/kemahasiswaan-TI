@@ -3,7 +3,6 @@
 @section('title', 'Beranda')
 
 @section('content')
-    <div class="page-shell">
         <!-- HERO -->
         <div class="hero-wrapper">
             <section class="hero-bg">
@@ -192,5 +191,4 @@
                 </div>
             </div>
         </section>
-    </div>
 @endsection

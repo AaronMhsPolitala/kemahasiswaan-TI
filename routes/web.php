@@ -104,9 +104,10 @@ Route::prefix('pengurus')->name('pengurus.')->group(function () {
     Route::get('calon-anggota-tahap-1/export-pdf', [AnggotaController::class, 'exportPdfTahap1'])->name('calon-anggota-tahap-1.exportPdf');
     Route::get('calon-anggota-tahap-1', [AnggotaController::class, 'calonAnggotaTahap1'])->name('calon-anggota-tahap-1.index');
     Route::get('calon-anggota-tahap-2', [AnggotaController::class, 'calonAnggotaTahap2'])->name('calon-anggota-tahap-2.index');
-    Route::post('calon-anggota/{pendaftaran}/approve-stage-2', [AdminAnggotaController::class, 'approveCandidateStage2'])->name('calon-anggota.approve-stage-2');
-    Route::post('calon-anggota/{pendaftaran}/reject-stage-2', [AdminAnggotaController::class, 'rejectCandidateStage2'])->name('calon-anggota.reject-stage-2');
-    Route::post('calon-anggota/{pendaftaran}/pass-interview', [AdminAnggotaController::class, 'passInterview'])->name('calon-anggota.pass-interview');
+    Route::post('calon-anggota/{pendaftaran}/approve-stage-2', [AnggotaController::class, 'approveCandidateStage2'])->name('calon-anggota.approve-stage-2');
+    Route::post('calon-anggota/{pendaftaran}/reject-stage-2', [AnggotaController::class, 'rejectCandidateStage2'])->name('calon-anggota.reject-stage-2');
+    Route::post('calon-anggota/{pendaftaran}/pass-interview', [AnggotaController::class, 'passInterview'])->name('calon-anggota.pass-interview');
+    Route::post('calon-anggota/{pendaftaran}/fail-interview', [AnggotaController::class, 'failInterview'])->name('calon-anggota.fail-interview');
     Route::get('kelola-anggota-himati', [AnggotaController::class, 'kelolaAnggotaHimati'])->name('kelola-anggota-himati.index');
     Route::get('anggota-per-divisi/{divisi}', [AnggotaController::class, 'anggotaPerDivisi'])->name('anggota.per.divisi');
 

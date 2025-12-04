@@ -154,20 +154,97 @@ class AnggotaController extends Controller
         }
     }
 
-    public function passInterview(Pendaftaran $pendaftaran)
+    public function approveCandidateStage2(Pendaftaran $pendaftaran, FonnteService $fonnte)
+    {
+        $pendaftaran->status = 'Lulus Wawancara'; // or 'Lulus Tahap 2'
+        $pendaftaran->save();
+
+        // Kirim notifikasi WhatsApp
+        $template = Storage::disk('local')->get('wa_template_diterima_tahap2.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
+        $result = $fonnte->send($pendaftaran->hp, $message);
+
+        if ($result['ok']) {
+            return redirect()->back()->with('success', 'Calon diterima di tahap 2 & notifikasi WhatsApp terkirim.');
+        } else {
+            Log::error('Fonnte Gagal Terkirim (Approve Tahap 2)', ['response' => $result]);
+
+            return redirect()->back()->with('warning', 'Calon diterima di tahap 2, tapi notifikasi WhatsApp gagal dikirim.');
+        }
+    }
+
+    public function rejectCandidateStage2(Pendaftaran $pendaftaran, FonnteService $fonnte)
+    {
+        $pendaftaran->status = 'Gagal Wawancara'; // or 'Ditolak Tahap 2'
+        $pendaftaran->save();
+
+        // Kirim notifikasi WhatsApp
+        $template = Storage::disk('local')->get('wa_template_ditolak_tahap2.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
+        $result = $fonnte->send($pendaftaran->hp, $message);
+
+        if ($result['ok']) {
+            return redirect()->back()->with('success', 'Calon ditolak di tahap 2 & notifikasi WhatsApp terkirim.');
+        } else {
+            Log::error('Fonnte Gagal Terkirim (Reject Tahap 2)', ['response' => $result]);
+
+            return redirect()->back()->with('warning', 'Calon ditolak di tahap 2, tapi notifikasi WhatsApp gagal dikirim.');
+        }
+    }
+
+
+    public function passInterview(Pendaftaran $pendaftaran, FonnteService $fonnte)
     {
         $pendaftaran->status = 'Lulus Wawancara';
         $pendaftaran->save();
 
-        return redirect()->route('admin.calon-anggota-tahap-2.index')->with('success', 'Kandidat telah dikonfirmasi lulus wawancara dan menjadi anggota aktif.');
+        // Kirim notifikasi WhatsApp
+        $template = Storage::disk('local')->get('wa_template_lolos_wawancara.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
+        $result = $fonnte->send($pendaftaran->hp, $message);
+
+        if ($result['ok']) {
+            return redirect()->route('admin.calon-anggota-tahap-2.index')->with('success', 'Kandidat lulus wawancara & notifikasi WhatsApp terkirim.');
+        } else {
+            Log::error('Fonnte Gagal Terkirim (Lulus Wawancara)', ['response' => $result]);
+
+            return redirect()->route('admin.calon-anggota-tahap-2.index')->with('warning', 'Kandidat lulus wawancara, tapi notifikasi WhatsApp gagal dikirim.');
+        }
     }
 
-    public function failInterview(Pendaftaran $pendaftaran)
+    public function failInterview(Pendaftaran $pendaftaran, FonnteService $fonnte)
     {
         $pendaftaran->status = 'Gagal Wawancara';
         $pendaftaran->save();
 
-        return redirect()->route('admin.calon-anggota-tahap-2.index')->with('success', 'Kandidat telah dikonfirmasi tidak lulus wawancara.');
+        // Kirim notifikasi WhatsApp
+        $template = Storage::disk('local')->get('wa_template_gagal_wawancara.txt');
+        $message = str_replace(
+            ['{nama}', '{nim}', '{divisi}'],
+            [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
+            $template
+        );
+        $result = $fonnte->send($pendaftaran->hp, $message);
+
+        if ($result['ok']) {
+            return redirect()->route('admin.calon-anggota-tahap-2.index')->with('success', 'Kandidat tidak lulus wawancara & notifikasi WhatsApp terkirim.');
+        } else {
+            Log::error('Fonnte Gagal Terkirim (Gagal Wawancara)', ['response' => $result]);
+
+            return redirect()->route('admin.calon-anggota-tahap-2.index')->with('warning', 'Kandidat tidak lulus wawancara, tapi notifikasi WhatsApp gagal dikirim.');
+        }
     }
 
     public function kelolaAnggotaHimati()

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
+use Illuminate\Support\Facades\DB;
+
 class UserPrestasiController extends Controller
 {
     public function index(Request $request)
@@ -28,8 +30,14 @@ class UserPrestasiController extends Controller
         if ($request->filled('tingkat_kegiatan')) {
             $query->where('tingkat_kegiatan', $request->tingkat_kegiatan);
         }
+        if ($request->filled('prestasi_yang_dicapai')) {
+            $query->where('prestasi_yang_dicapai', $request->prestasi_yang_dicapai);
+        }
         if ($request->filled('keterangan')) {
             $query->where('keterangan', $request->keterangan);
+        }
+        if ($request->filled('tahun')) {
+            $query->whereYear('waktu_penyelenggaraan', $request->tahun);
         }
 
         // Get all matching results, then sort by the accessor
@@ -48,7 +56,12 @@ class UserPrestasiController extends Controller
         // Data for filters
         $tingkat_kegiatans = ['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'];
         $keterangans = ['Akademik', 'Non-Akademik'];
+        $tahuns = Prestasi::select(DB::raw('YEAR(waktu_penyelenggaraan) as year'))
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
 
-        return view('user.prestasi', compact('prestasis', 'tingkat_kegiatans', 'keterangans'));
+
+        return view('user.prestasi', compact('prestasis', 'tingkat_kegiatans', 'keterangans', 'tahuns'));
     }
 }

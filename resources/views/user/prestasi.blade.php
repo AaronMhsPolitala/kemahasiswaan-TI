@@ -59,6 +59,18 @@
     .text-gold-emphasis {
         color: #a1887f;
     }
+    /* Custom style for selected filter buttons */
+    .btn-check:checked + .btn-outline-secondary {
+        background-color: var(--bs-primary); /* Bootstrap's primary blue */
+        border-color: var(--bs-primary);
+        color: #fff; /* White text */
+    }
+    .btn-check:checked + .btn-outline-secondary:hover,
+    .btn-check:checked + .btn-outline-secondary:focus {
+        background-color: var(--bs-primary); /* Ensure it stays primary on hover/focus */
+        border-color: var(--bs-primary);
+        color: #fff;
+    }
 </style>
 @endpush
 
@@ -70,43 +82,22 @@
     </div>
 
     <div class="card shadow-sm mb-4">
-        <div class="card-header card-header-custom">
-            <i class="bi bi-funnel-fill me-2"></i> Filter & Pencarian
-        </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('user.prestasi') }}">
+            <form method="GET" action="{{ route('user.prestasi') }}" id="searchForm">
                 <div class="row g-3">
-                    <div class="col-md-5">
+                    <div class="col-md-10">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <span class="input-group-text bg-primary text-white"><i class="bi bi-search"></i></span>
                             <input type="text" name="search" class="form-control"
                                    placeholder="Cari Nama, NIM, atau Kegiatan..."
                                    value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit" id="button-addon2">Search</button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <select name="tingkat_kegiatan" class="form-select">
-                            <option value="">Semua Tingkat</option>
-                            @foreach ($tingkat_kegiatans as $tingkat)
-                                <option value="{{ $tingkat }}" {{ request('tingkat_kegiatan') == $tingkat ? 'selected' : '' }}>
-                                    {{ $tingkat }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="keterangan" class="form-select">
-                            <option value="">Keterangan</option>
-                            @foreach ($keterangans as $keterangan)
-                                <option value="{{ $keterangan }}" {{ request('keterangan') == $keterangan ? 'selected' : '' }}>
-                                    {{ $keterangan }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div class="col-md-2 d-flex">
-                        <button type="submit" class="btn btn-primary w-100 me-2 d-flex align-items-center justify-content-center"><i class="bi bi-filter me-1"></i> Filter</button>
-                        <a href="{{ route('user.prestasi') }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center"><i class="bi bi-arrow-counterclockwise"></i></a>
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#filterModal">
+                            <i class="bi bi-funnel-fill me-2"></i> Filter
+                        </button>
                     </div>
                 </div>
             </form>
@@ -118,11 +109,8 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr class="text-center">
-                        <th>Peringkat</th>
                         <th>NIM</th>
                         <th>Nama Mahasiswa</th>
-                        <th>IPK</th>
-                        <th>Skor Prestasi</th>
                         <th>Nama Kegiatan</th>
                         <th>Waktu</th>
                         <th>Tingkat</th>
@@ -133,25 +121,8 @@
                 <tbody>
                     @forelse ($prestasis as $prestasi)
                         <tr class="text-center">
-                            <td class="fw-bold">
-                                @if (($prestasis->currentPage() - 1) * $prestasis->perPage() + $loop->iteration == 1)
-                                    <i class="bi bi-trophy-fill text-warning fs-4"></i>
-                                @elseif (($prestasis->currentPage() - 1) * $prestasis->perPage() + $loop->iteration == 2)
-                                    <i class="bi bi-trophy-fill text-secondary fs-4"></i>
-                                @elseif (($prestasis->currentPage() - 1) * $prestasis->perPage() + $loop->iteration == 3)
-                                    <i class="bi bi-trophy-fill text-bronze fs-4"></i>
-                                @else
-                                    {{ ($prestasis->currentPage() - 1) * $prestasis->perPage() + $loop->iteration }}
-                                @endif
-                            </td>
                             <td class="fw-bold">{{ $prestasi->nim }}</td>
                             <td class="text-start fw-bold">{{ $prestasi->nama_mahasiswa }}</td>
-                            <td><i class="bi bi-star-fill text-warning me-1"></i> {{ number_format($prestasi->ipk, 2) }}</td>
-                            <td>
-                                <span class="badge bg-success-subtle text-success-emphasis rounded-pill fw-bold">
-                                    {{ number_format($prestasi->total_skor * 100, 2) }}
-                                </span>
-                            </td>
                             <td class="text-start fw-bold">{{ $prestasi->nama_kegiatan }}</td>
                             <td>{{ \Carbon\Carbon::parse($prestasi->waktu_penyelenggaraan)->format('d/m/Y') }}</td>
                             <td>
@@ -220,7 +191,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="text-center py-5">
+                            <td colspan="7" class="text-center py-5">
                                 <i class="bi bi-exclamation-triangle-fill display-4 text-warning"></i>
                                 <h4 class="mt-3">Data Tidak Ditemukan</h4>
                                 <p class="text-muted">Tidak ada data prestasi yang cocok dengan filter Anda.</p>
@@ -239,3 +210,162 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filterModalLabel">
+            <i class="bi bi-funnel me-2"></i> Filter Prestasi
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        {{-- TINGKAT --}}
+        <div class="mb-4">
+          <h6 class="mb-3">Tingkat Kegiatan</h6>
+            @php
+                $tingkats = ['Internasional','Nasional','Provinsi/Wilayah','Kabupaten/Kota','Internal (Kampus)'];
+            @endphp
+            @foreach($tingkats as $tingkat)
+                @php $id = 'btn_tingkat_'.Str::slug($tingkat,'_'); @endphp
+                <input type="radio" class="btn-check tingkat-option"
+                       name="tingkat_option" id="{{ $id }}"
+                       value="{{ $tingkat }}"
+                        {{ request('tingkat_kegiatan') == $tingkat ? 'checked' : '' }}>
+                <label class="btn btn-outline-secondary me-2 mb-2" for="{{ $id }}">
+                    {{ $tingkat }}
+                </label>
+            @endforeach
+
+        </div>
+
+        <hr>
+
+        {{-- JUARA --}}
+        <div class="mb-4">
+          <h6 class="mb-3">Capaian / Juara</h6>
+            @php
+                $juaras = ['Juara 1','Juara 2','Juara 3','Partisipan'];
+            @endphp
+            @foreach($juaras as $juara)
+                @php $id = 'btn_juara_'.Str::slug($juara,'_'); @endphp
+                <input type="radio" class="btn-check juara-option"
+                       name="juara_option" id="{{ $id }}"
+                       value="{{ $juara }}"
+                        {{ request('prestasi_yang_dicapai') == $juara ? 'checked' : '' }}>
+                <label class="btn btn-outline-secondary me-2 mb-2" for="{{ $id }}">
+                    {{ $juara }}
+                </label>
+            @endforeach
+
+        </div>
+
+        <hr>
+
+        {{-- KETERANGAN --}}
+        <div class="mb-4">
+          <h6 class="mb-3">Keterangan</h6>
+            @php $kets = ['Akademik','Non-Akademik']; @endphp
+            @foreach($kets as $ket)
+                @php $id = 'btn_ket_'.Str::slug($ket,'_'); @endphp
+                <input type="radio" class="btn-check ket-option"
+                       name="ket_option" id="{{ $id }}"
+                       value="{{ $ket }}"
+                        {{ request('keterangan') == $ket ? 'checked' : '' }}>
+                <label class="btn btn-outline-secondary me-2 mb-2" for="{{ $id }}">
+                    {{ $ket }}
+                </label>
+            @endforeach
+        </div>
+
+        <hr>
+
+        {{-- WAKTU --}}
+        <div class="mb-4">
+            <h6 class="mb-3">Tahun</h6>
+            @foreach($tahuns as $tahun)
+                @php $id = 'btn_tahun_'.$tahun; @endphp
+                <input type="radio" class="btn-check tahun-option"
+                       name="tahun_option" id="{{ $id }}"
+                       value="{{ $tahun }}"
+                        {{ request('tahun') == $tahun ? 'checked' : '' }}>
+                <label class="btn btn-outline-secondary me-2 mb-2" for="{{ $id }}">
+                    {{ $tahun }}
+                </label>
+            @endforeach
+        </div>
+      </div>
+
+      {{-- footer modal: atur ulang & terapkan --}}
+      <div class="modal-footer">
+        <a href="{{ route('user.prestasi') }}" class="btn btn-outline-secondary">Atur Ulang</a>
+        <button type="button" class="btn btn-primary" id="applyFilter">Pakai</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchForm = document.getElementById('searchForm');
+        const applyFilterBtn = document.getElementById('applyFilter');
+
+        // Function to allow deselecting radio buttons
+        function setupRadioDeselect(radioGroupName) {
+            const radios = document.querySelectorAll(`input[name="${radioGroupName}"]`);
+            let lastChecked = document.querySelector(`input[name="${radioGroupName}"]:checked`);
+
+            radios.forEach(radio => {
+                radio.addEventListener('click', function() {
+                    if (this === lastChecked) {
+                        this.checked = false;
+                        lastChecked = null;
+                    } else {
+                        lastChecked = this;
+                    }
+                });
+            });
+        }
+
+        setupRadioDeselect('tingkat_option');
+        setupRadioDeselect('juara_option');
+        setupRadioDeselect('ket_option');
+        setupRadioDeselect('tahun_option');
+
+        // Handle Apply Filter button click
+        applyFilterBtn.addEventListener('click', function () {
+            const selectedTingkat = document.querySelector('input[name="tingkat_option"]:checked');
+            const selectedJuara = document.querySelector('input[name="juara_option"]:checked');
+            const selectedKet = document.querySelector('input[name="ket_option"]:checked');
+            const selectedTahun = document.querySelector('input[name="tahun_option"]:checked');
+
+            const searchInput = document.querySelector('input[name="search"]');
+
+            // Build the URL
+            let url = new URL(searchForm.action);
+            if (searchInput.value) {
+                url.searchParams.set('search', searchInput.value);
+            }
+            if (selectedTingkat) {
+                url.searchParams.set('tingkat_kegiatan', selectedTingkat.value);
+            }
+            if (selectedJuara) {
+                url.searchParams.set('prestasi_yang_dicapai', selectedJuara.value);
+            }
+            if (selectedKet) {
+                url.searchParams.set('keterangan', selectedKet.value);
+            }
+            if (selectedTahun) {
+                url.searchParams.set('tahun', selectedTahun.value);
+            }
+
+            window.location.href = url.toString();
+        });
+
+    });
+</script>
+@endpush
+
