@@ -21,10 +21,12 @@
         <h2 class="komentar-title">Komentar</h2>
         <form action="{{ route('user.komentar.store', $berita->id) }}" method="POST">
             @csrf
+            @guest
             <div class="form-group">
                 <label for="nama">Nama</label>
                 <input type="text" name="nama" id="nama" class="form-control" required>
             </div>
+            @endguest
             <div class="form-group">
                 <label for="isi_komentar">Komentar</label>
                 <textarea name="isi_komentar" id="isi_komentar" rows="5" class="form-control" required></textarea>

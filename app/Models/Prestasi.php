@@ -28,91 +28,62 @@ class Prestasi extends Model
     public function getTotalSkorAttribute()
     {
         // =======================
-        // 1. KONVERSI KE NILAI (x_ij)
+        // 1. Dapatkan Bobot dari file JSON
+        // =======================
+        $weightsPath = storage_path('app/saw_weights.json');
+        if (file_exists($weightsPath)) {
+            $weights = json_decode(file_get_contents($weightsPath), true);
+        } else {
+            // Fallback default weights jika file tidak ada
+            $weights = [
+                'C1' => 0.40, // IPK
+                'C2' => 0.30, // Tingkat Kegiatan
+                'C3' => 0.30, // Prestasi
+            ];
+        }
+
+        // =======================
+        // 2. KONVERSI KE NILAI (x_ij)
         // =======================
 
-        // C1 - Tingkatan
+        // C1 - IPK
+        $skorIpk = (float) $this->ipk; // Range: 0 – 4
+
+        // C2 - Tingkat Kegiatan
         $skorTingkatan = 0;
         switch ($this->tingkat_kegiatan) {
-            case 'Internasional':
-                $skorTingkatan = 30;
-                break;
-            case 'Nasional':
-                $skorTingkatan = 24;
-                break;
-            case 'Provinsi/Wilayah':
-            case 'Provinsi': // disesuaikan dengan pilihan di controller/form
-                $skorTingkatan = 18;
-                break;
-            case 'Kabupaten/Kota':
-                $skorTingkatan = 12;
-                break;
-            case 'Internal (Kampus)':
-                $skorTingkatan = 6;
-                break;
-            default:
-                $skorTingkatan = 0;
-                break;
+            case 'Internasional': $skorTingkatan = 5; break;
+            case 'Nasional': $skorTingkatan = 4; break;
+            case 'Provinsi': $skorTingkatan = 3; break;
+            case 'Kabupaten/Kota': $skorTingkatan = 2; break;
+            case 'Internal (Kampus)': $skorTingkatan = 1; break;
         }
 
-        // C2 - Juara
-        $skorJuara = 0;
+        // C3 - Prestasi yang Dicapai
+        $skorPrestasi = 0;
         switch ($this->prestasi_yang_dicapai) {
-            case 'Juara 1':
-                $skorJuara = 20;
-                break;
-            case 'Juara 2':
-                $skorJuara = 15;
-                break;
-            case 'Juara 3':
-                $skorJuara = 10;
-                break;
-            default: // Lainnya / Partisipan
-                $skorJuara = 5;
-                break;
-        }
-
-        // C3 - IPK
-        $skorIpk = (float) $this->ipk; // 0 – 4
-
-        // C4 - Keterangan/Bukti
-        $skorBukti = 0;
-        if ($this->keterangan === 'Akademik') {
-            $skorBukti = $this->bukti_prestasi ? 10 : 5;
-        } elseif ($this->keterangan === 'Non-Akademik') {
-            $skorBukti = $this->bukti_prestasi ? 8 : 3;
+            case 'Juara 1': $skorPrestasi = 4; break;
+            case 'Juara 2': $skorPrestasi = 3; break;
+            case 'Juara 3': $skorPrestasi = 2; break;
+            default: $skorPrestasi = 1; break; // Lainnya / Partisipan
         }
 
         // =======================
-        // 2. NORMALISASI (r_ij)
-        //    r_ij = x_ij / max(x_j)
+        // 3. NORMALISASI (r_ij) - r_ij = x_ij / max(x_j)
         // =======================
 
-        $rTingkatan = $skorTingkatan > 0 ? $skorTingkatan / 30 : 0; // max 30
-        $rJuara     = $skorJuara     > 0 ? $skorJuara     / 20 : 0; // max 20
-        $rIpk       = $skorIpk       > 0 ? $skorIpk       / 4  : 0; // max 4.00
-        $rBukti     = $skorBukti     > 0 ? $skorBukti     / 10 : 0; // max 10
+        $rIpk        = $skorIpk > 0 ? $skorIpk / 4 : 0;          // max IPK adalah 4
+        $rTingkatan  = $skorTingkatan > 0 ? $skorTingkatan / 5 : 0; // max skor tingkatan adalah 5
+        $rPrestasi   = $skorPrestasi > 0 ? $skorPrestasi / 4 : 0;   // max skor prestasi adalah 4
 
         // =======================
-        // 3. BOBOT SAW
-        // =======================
-        $wTingkatan = 0.25;
-        $wJuara     = 0.44;
-        $wIpk       = 0.17;
-        $wBukti     = 0.12;
-
-        // =======================
-        // 4. NILAI PREFERENSI (V_i)
+        // 4. NILAI PREFERENSI (V_i) - V_i = Σ(w_j * r_ij)
         // =======================
 
         $totalSkorSaw =
-            ($rTingkatan * $wTingkatan) +
-            ($rJuara     * $wJuara) +
-            ($rIpk       * $wIpk) +
-            ($rBukti     * $wBukti);
-
-        // Kalau mau dinormalisasi ke 0–100, bisa pakai:
-        // return $totalSkorSaw * 100;
+            ($rIpk * $weights['C1']) +
+            ($rTingkatan * $weights['C2']) +
+            ($rPrestasi * $weights['C3']);
 
         return $totalSkorSaw;
     }

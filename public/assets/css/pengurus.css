@@ -4,7 +4,30 @@ a{text-decoration:none;color:inherit}
 ul{list-style:none}
 
 /* Sidebar */
-.sidebar{width:250px;background:#fff;height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;border-right:1px solid #e9ecef; transition: width 0.3s ease;}
+.sidebar{width:250px;background:#fff;height:100vh;position:fixed;left:0;top:0;display:flex;flex-direction:column;border-right:1px solid #e9ecef; transition: width 0.3s ease;
+    overflow-y: auto;              /* AKTIFKAN SCROLL */
+    max-height: 100vh;
+
+    /* Scrollbar untuk Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Scrollbar Chrome & Edge */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
 .sidebar-header{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid #e9ecef}
 .sidebar-header img.logo {
     width: 50px;         /* ukuran logo */
@@ -143,11 +166,20 @@ ul{list-style:none}
 }
 
 .sidebar-nav details .items a {
-    display: block;
+    display: flex; /* Change to flexbox */
+    align-items: center; /* Vertically align items */
     padding: 8px 15px;
     color: #495057;
     text-decoration: none;
     font-size: 14px;
+}
+
+.sidebar-nav details .items a::before {
+    content: "•"; /* Add bullet point */
+    color: #0d6efd; /* Use a primary color */
+    font-size: 18px;
+    margin-right: 10px; /* Space between bullet and text */
+    line-height: 0;
 }
 
 .sidebar-nav details .items a:hover {

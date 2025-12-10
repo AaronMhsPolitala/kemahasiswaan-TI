@@ -88,6 +88,6 @@
 </div>
 
 <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Simpan</button>
-    <a href="{{ route('admin.prestasi.index') }}" class="btn" style="background-color: #f3f4f6;">Batal</a>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+    <a href="{{ route('admin.prestasi.index') }}" class="btn" style="background-color: #f3f4f6;"><i class="fas fa-times"></i> Batal</a>
 </div>

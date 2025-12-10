@@ -68,5 +68,5 @@
 </div>
 
 <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
 </div>

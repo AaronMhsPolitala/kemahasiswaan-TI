@@ -8,7 +8,7 @@
 
     <section class="data-table-container" style="margin-top:12px">
         <div style="margin-bottom:12px;">
-            <a href="{{ route('admin.divisi.create') }}" class="btn-add">Tambah Divisi</a>
+            <a href="{{ route('admin.divisi.create') }}" class="btn-add"><i class="fas fa-plus"></i> Tambah Divisi</a>
         </div>
 
         @if(session('success'))
@@ -39,12 +39,12 @@
                         <td>{{ $divisi->nama_divisi }}</td>
                         <td style="max-width:320px">{!! Str::limit($divisi->deskripsi, 60) !!}</td>
                         <td>
-                            <a href="{{ route('admin.divisi.show', $divisi) }}" class="btn-blue">Lihat</a>
-                            <a href="{{ route('admin.divisi.edit', $divisi) }}" class="btn-yellow">Edit</a>
+                            <a href="{{ route('admin.divisi.show', $divisi) }}" class="btn-blue"><i class="fas fa-eye"></i></a>
+                            <a href="{{ route('admin.divisi.edit', $divisi) }}" class="btn-yellow"><i class="fas fa-edit"></i></a>
                             <form action="{{ route('admin.divisi.destroy', $divisi) }}" method="POST" class="delete-form" style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn-red btn-hapus">Hapus</button>
+                                <button type="button" class="btn-red btn-hapus"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -75,10 +75,11 @@
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 #divisi-admin-page .btn-add{background:#22c55e;color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;text-decoration:none}
 #divisi-admin-page .btn-blue{background:#3b82f6;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600; border: none; cursor: pointer;}
-#divisi-admin-page .btn-yellow{background:#f59e0b;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600; border: none; cursor: pointer;}
+#divisi-admin-page .btn-yellow{background:#eab308;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600; border: none; cursor: pointer;}
 #divisi-admin-page .btn-red{background:#ef4444;color:#fff;padding:6px 10px;border-radius:6px;border:0;font-weight:600;cursor:pointer}
 #divisi-admin-page .data-table{width:100%;border-collapse:collapse}
 #divisi-admin-page .data-table th,#divisi-admin-page .data-table td{border:1px solid #e5e7eb;padding:8px 12px}

@@ -36,12 +36,13 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn-submit">Perbarui</button>
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Perbarui</button>
         </form>
     </div>
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .form-container {background-color: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);}
 .form-group {margin-bottom: 20px;}

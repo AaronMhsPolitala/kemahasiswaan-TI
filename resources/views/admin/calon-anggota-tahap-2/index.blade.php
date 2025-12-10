@@ -3,6 +3,7 @@
 @section('title', 'Kelola Wawancara Calon Anggota')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #calon-anggota-page {
         --primary-color: #2563eb;
@@ -84,7 +85,7 @@
                             </span>
                         </td>
                         <td class="action-btns">
-                            <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}'>Lihat & Tindaki</button>
+                            <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}'><i class="fas fa-eye"></i></button>
                         </td>
                     </tr>
                 @empty
@@ -115,11 +116,11 @@
             <div class="modal-footer-buttons">
                 <form id="failInterviewForm" method="POST" style="display:inline;">
                     @csrf
-                    <button type="submit" class="btn-danger">Gagal Wawancara</button>
+                    <button type="submit" class="btn-danger"><i class="fas fa-times"></i> Gagal</button>
                 </form>
                 <form id="passInterviewForm" method="POST" style="display:inline;">
                     @csrf
-                    <button type="submit" class="btn-success">Lulus Wawancara</button>
+                    <button type="submit" class="btn-success"><i class="fas fa-check"></i> Lulus</button>
                 </form>
             </div>
         </div>

@@ -3,6 +3,7 @@
 @section('title', 'Kelola Calon Anggota Tahap 1')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #calon-anggota-page {
         --primary-color: #2563eb;
@@ -120,10 +121,10 @@
                 @endforeach
             </select>
 
-            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
-            <a href="{{ route('admin.calon-anggota-tahap-1.index') }}" class="btn btn-secondary">Reset</a>
-            <a href="{{ route('admin.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success">Export PDF</a>
-            <a href="{{ route('admin.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i></button>
+            <a href="{{ route('admin.calon-anggota-tahap-1.index') }}" class="btn btn-secondary"><i class="fas fa-sync"></i></a>
+            <a href="{{ route('admin.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i></a>
+            <a href="{{ route('admin.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i></a>
         </form>
     </div>
 
@@ -168,7 +169,7 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'>Lihat</button>
+                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'><i class="fas fa-eye"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -205,7 +206,7 @@
                 <form id="deleteFormInModal" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>
                 </form>
             </div>
         </div>

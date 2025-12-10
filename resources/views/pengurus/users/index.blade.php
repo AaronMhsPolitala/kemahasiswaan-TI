@@ -2,6 +2,7 @@
 @section('title','Kelola Pengguna')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .btn-green{background:#22c55e;color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;text-decoration:none}
 .btn-blue{background:#3b82f6;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;font-weight:600; border: none; cursor: pointer;}
@@ -71,10 +72,10 @@
           <td>{{ strtoupper($user->role) }}</td>
           <td>
             <div style="display: flex; gap: 6px;">
-                <button class="btn-blue btn-lihat" data-id="{{ $user->id }}">Lihat</button>
+                <button class="btn-blue btn-lihat" data-id="{{ $user->id }}"><i class="fas fa-eye"></i></button>
                 @if($user->role !== 'admin')
-                    <button class="btn-yellow btn-edit" data-id="{{ $user->id }}">Edit</button>
-                    <button class="btn-red btn-hapus" data-id="{{ $user->id }}">Hapus</button>
+                    <button class="btn-yellow btn-edit" data-id="{{ $user->id }}"><i class="fas fa-edit"></i></button>
+                    <button class="btn-red btn-hapus" data-id="{{ $user->id }}"><i class="fas fa-trash"></i></button>
                 @endif
             </div>
           </td>
@@ -136,7 +137,7 @@
             </select>
         </div>
         <div class="modal-footer-buttons">
-            <button type="submit" class="btn-primary" style="padding: 8px 15px; border: none; border-radius: 6px;">Simpan Perubahan</button>
+            <button type="submit" class="btn-primary" style="padding: 8px 15px; border: none; border-radius: 6px;"><i class="fas fa-save"></i> Simpan Perubahan</button>
         </div>
     </form>
   </div>
@@ -152,7 +153,7 @@
         <form id="deleteForm" method="POST" style="display:inline;">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn-danger">Hapus</button>
+            <button type="submit" class="btn-danger"><i class="fas fa-trash"></i> Hapus</button>
         </form>
     </div>
   </div>

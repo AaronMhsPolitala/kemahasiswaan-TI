@@ -53,7 +53,7 @@
         width: 100%;
         padding: 0.6rem 1.5rem;
         clear: both;
-        font-weight: 500;
+        font-weight: 400;
         color: #374151;
         text-align: inherit;
         white-space: nowrap;
@@ -86,9 +86,9 @@
             <a class="profile-dropdown-item" href="{{ route('user.beranda') }}">Beranda User</a>
             <a class="profile-dropdown-item" href="{{ route('user.profil.edit') }}">Pengaturan Profil</a>
             <div class="profile-dropdown-divider"></div>
-            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Apakah Anda yakin ingin keluar?');">
+            <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="profile-dropdown-item">Logout</button>
+                <a href="#" class="profile-dropdown-item" onclick="event.preventDefault(); if(confirm('Apakah Anda yakin ingin keluar?')) this.closest('form').submit();">Logout</a>
             </form>
         </div>
       </div>

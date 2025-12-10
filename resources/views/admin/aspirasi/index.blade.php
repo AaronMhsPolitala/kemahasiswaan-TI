@@ -8,7 +8,9 @@
 
     <section class="data-table-container" style="margin-top:12px">
         <div style="margin-bottom:12px;">
-            <a href="{{ route('admin.aspirasi.printPdf') }}" class="btn-print" target="_blank">Cetak Semua Aspirasi (PDF)</a>
+            <a href="{{ route('admin.aspirasi.printPdf') }}" class="btn-print" target="_blank">
+    <i class="fas fa-print"></i> Cetak PDF
+</a>
         </div>
 
         @if(session('ok'))
@@ -40,12 +42,12 @@
                                 data-email="{{ $aspirasi->email }}"
                                 data-pesan="{{ nl2br(e($aspirasi->pesan)) }}"
                                 data-waktu="{{ $aspirasi->created_at->format('d F Y, H:i') }}">
-                                Lihat
+                                <i class="fas fa-eye"></i>
                             </button>
                             <form action="{{ route('admin.aspirasi.destroy', $aspirasi) }}" method="POST" class="delete-form" style="display:inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn-red btn-hapus">Hapus</button>
+                                <button type="button" class="btn-red btn-hapus"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>
@@ -94,6 +96,7 @@
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 #aspirasi-admin-page .btn-print{background:#22c55e;color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;text-decoration:none}
 #aspirasi-admin-page .btn-blue{background:#3b82f6;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600; border: none; cursor: pointer;}

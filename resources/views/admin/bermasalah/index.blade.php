@@ -3,6 +3,7 @@
 @section('title', 'Data Mahasiswa Bermasalah')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #bermasalah-page {
         --primary-color: #2563eb;
@@ -21,10 +22,10 @@
     .action-btns { display: flex; gap: 0.5rem; }
     .btn { padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
     .btn-primary { background-color: var(--primary-color); color: #fff; }
-    .btn-edit { background-color: #f97316; color: #fff; }
+    .btn-edit { background-color: #eab308; color: #fff; }
     .btn-danger { background-color: var(--danger-color); color: #fff; }
     .btn-success { background-color: var(--success-color); color: #fff; }
-    .btn-warning { background-color: #f97316; color: #fff; }
+    .btn-warning { background-color: #eab308; color: #fff; }
     .filter-bar { display: flex; gap: 1rem; margin-bottom: 2.5rem; align-items: center; }
     .filter-bar input, .filter-bar select { padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid var(--border-color); }
     .alert { padding: 1rem; margin-bottom: 1.5rem; border-radius: 0.375rem; }
@@ -45,9 +46,9 @@
     <div class="d-flex justify-content-between align-items-center my-4" style="margin-bottom: 1.5rem;">
         <h1>Data Mahasiswa Bermasalah</h1>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.mahasiswa-bermasalah.create') }}" class="btn btn-primary">Tambah Data</a>
-            <a href="{{ route('admin.mahasiswa-bermasalah.exportPdf') }}" class="btn btn-success">Export PDF</a>
-            <a href="{{ route('admin.mahasiswa-bermasalah.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i> Export PDF</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i> Export CSV</a>
         </div>
     </div>
 
@@ -72,7 +73,7 @@
                 <option value="ditanggapi" {{ request('status') == 'ditanggapi' ? 'selected' : '' }}>Ditanggapi</option>
                 <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
             </select>
-            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
         </form>
     </div>
 
@@ -97,9 +98,9 @@
                         <td>{{ Str::limit($pengaduan->keterangan, 50) }}</td>
                         <td>{{ $pengaduan->status }}</td>
                         <td class="action-btns">
-                            <button type="button" class="btn btn-primary view-btn" data-pengaduan='{{ json_encode($pengaduan) }}'>Lihat</button>
-                            <a href="{{ route('admin.mahasiswa-bermasalah.edit', $pengaduan->id) }}" class="btn btn-edit">Edit</a>
-                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $pengaduan->id }}">Hapus</button>
+                            <button type="button" class="btn btn-primary view-btn" data-pengaduan='{{ json_encode($pengaduan) }}'><i class="fas fa-eye"></i></button>
+                            <a href="{{ route('admin.mahasiswa-bermasalah.edit', $pengaduan->id) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $pengaduan->id }}"><i class="fas fa-trash"></i></button>
                             <form id="delete-form-{{ $pengaduan->id }}" action="{{ route('admin.mahasiswa-bermasalah.destroy', $pengaduan->id) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')

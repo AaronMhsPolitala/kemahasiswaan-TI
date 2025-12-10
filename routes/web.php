@@ -57,6 +57,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('berita', AdminBeritaController::class);
     Route::get('prestasi/export-pdf', [AdminPrestasiController::class, 'exportPdf'])->name('prestasi.exportPdf');
     Route::get('prestasi/export-csv', [AdminPrestasiController::class, 'exportCsv'])->name('prestasi.exportCsv');
+    Route::get('prestasi/saw', [AdminPrestasiController::class, 'saw'])->name('prestasi.saw');
+    Route::post('prestasi/saw', [AdminPrestasiController::class, 'updateSaw'])->name('prestasi.saw.update');
     Route::resource('prestasi', AdminPrestasiController::class);
     Route::resource('anggota', AdminAnggotaController::class);
     Route::resource('divisi', DivisiController::class);

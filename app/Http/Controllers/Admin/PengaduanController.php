@@ -140,6 +140,6 @@ class PengaduanController extends Controller
 
         Pengaduan::create($data);
 
-        return redirect()->route('admin.mahasiswa-bermasalah.index')->with('success', 'Pengaduan berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Pengaduan Anda telah berhasil dikirim.');
     }
 }

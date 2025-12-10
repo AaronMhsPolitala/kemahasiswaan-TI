@@ -7,7 +7,7 @@
 
     <section class="data-table-container" style="margin-top:12px">
         <div style="margin-bottom:12px;">
-            <a href="{{ route('pengurus.berita.create') }}" class="btn-green">Tambah Berita</a>
+            <a href="{{ route('pengurus.berita.create') }}" class="btn-green"><i class="fas fa-plus"></i> Tambah Berita</a>
         </div>
 
         @if(session('ok'))
@@ -35,12 +35,12 @@
                         <td>{{ $berita->created_at->format('d M Y H:i') }}</td>
                         <td>
                             <div style="display: flex; gap: 6px;">
-                                <a class="btn-blue" href="{{ route('pengurus.berita.show', $berita) }}">Lihat</a>
-                                <a class="btn-yellow" href="{{ route('pengurus.berita.edit', $berita) }}">Edit</a>
+                                <a class="btn-blue" href="{{ route('pengurus.berita.show', $berita) }}"><i class="fas fa-eye"></i></a>
+                                <a class="btn-yellow" href="{{ route('pengurus.berita.edit', $berita) }}"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('pengurus.berita.destroy', $berita) }}" method="POST" class="delete-form" style="display:inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn-red btn-hapus">Hapus</button>
+                                    <button type="button" class="btn-red btn-hapus"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
@@ -71,6 +71,7 @@
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .btn-green{background:#22c55e;color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;text-decoration:none}
 .btn-blue{background:#3b82f6;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600}

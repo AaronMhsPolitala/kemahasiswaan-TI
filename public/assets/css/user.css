@@ -122,7 +122,8 @@ header nav ul li a:hover{color:rgba(255, 255, 255, 0.8);}
 header .login-button{
   background:#fff;color:#0d6efd;border:2px solid #fff;
   padding:8px 25px;border-radius:20px;font-weight:600;cursor:pointer;
-  transition:all .3s
+  transition:all .3s;
+  text-decoration: none;
 }
 header .login-button:hover{background:transparent;color:#fff}
 

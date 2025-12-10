@@ -3,6 +3,7 @@
 @section('title', 'Kelola Calon Anggota')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #calon-anggota-page {
         --primary-color: #2563eb;
@@ -113,10 +114,10 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}'>Lihat</button>
+                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}'><i class="fas fa-eye"></i></button>
                                 <form action="{{ route('admin.calon-anggota.destroy', $candidate->id) }}" method="POST" class="delete-form" style="display:inline">
                                     @csrf @method('DELETE')
-                                    <button type="button" class="btn-hapus">Hapus</button>
+                                    <button type="button" class="btn-hapus"><i class="fas fa-trash"></i></button>
                                 </form>
                             </div>
                         </td>
@@ -149,11 +150,11 @@
             <div class="modal-footer-buttons">
                 <form id="approveForm" method="POST" style="display:inline;" onsubmit="return confirm('Anda yakin ingin MENERIMA calon ini? Notifikasi WA akan dikirim.');">
                     @csrf
-                    <button type="submit" class="btn-success">Terima</button>
+                    <button type="submit" class="btn-success"><i class="fas fa-check"></i> Terima</button>
                 </form>
                 <form id="rejectForm" method="POST" style="display:inline;" onsubmit="return confirm('Anda yakin ingin MENOLAK calon ini? Notifikasi WA akan dikirim.');">
                     @csrf
-                    <button type="submit" class="btn-danger">Tolak</button>
+                    <button type="submit" class="btn-danger"><i class="fas fa-times"></i> Tolak</button>
                 </form>
             </div>
         </div>
@@ -166,7 +167,7 @@
             <h2>Konfirmasi Hapus</h2>
             <p>Apakah Anda yakin ingin menghapus data ini?</p>
             <div class="modal-footer-buttons">
-                <button type="button" id="confirmDeleteBtn" class="btn-danger">Hapus</button>
+                <button type="button" id="confirmDeleteBtn" class="btn-danger"><i class="fas fa-trash"></i> Hapus</button>
             </div>
         </div>
     </div>

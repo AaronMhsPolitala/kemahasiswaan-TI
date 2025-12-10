@@ -3,6 +3,7 @@
 @section('title', 'Kelola Calon Anggota Tahap 1')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #calon-anggota-page {
         --primary-color: #2563eb;
@@ -87,7 +88,7 @@
     #calon-anggota-page .modal-footer-buttons button { margin-left: 10px; padding: 10px 18px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
     #calon-anggota-page .btn-danger { background-color: var(--danger-color); color: white; }
     #calon-anggota-page .btn-success { background-color: #28a745; color: white; }
-    .btn-warning { background-color: #f97316; color: #fff; }
+    .btn-warning { background-color: #eab308; color: #fff; }
 
     .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
     .filter-bar input, .filter-bar select { padding: 0.5rem 1rem; border-radius: 0.375rem; border: 1px solid var(--border-color); }
@@ -120,10 +121,10 @@
                 @endforeach
             </select>
 
-            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
-            <a href="{{ route('pengurus.calon-anggota-tahap-1.index') }}" class="btn btn-secondary">Reset</a>
-            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success">Export PDF</a>
-            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i></button>
+            <a href="{{ route('pengurus.calon-anggota-tahap-1.index') }}" class="btn btn-secondary"><i class="fas fa-sync"></i></a>
+            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i></a>
+            <a href="{{ route('pengurus.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i></a>
         </form>
     </div>
 
@@ -168,7 +169,7 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'>Lihat</button>
+                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'><i class="fas fa-eye"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -205,7 +206,7 @@
                 <form id="deleteFormInModal" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>
                 </form>
             </div>
         </div>

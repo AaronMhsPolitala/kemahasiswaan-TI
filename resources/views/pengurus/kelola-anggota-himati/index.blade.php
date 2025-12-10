@@ -3,6 +3,7 @@
 @section('title', 'Kelola Anggota Hima-TI')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     /* Using similar styles from other pages for consistency */
     #anggota-aktif-page h1 { font-size: 1.875rem; font-weight: 700; color: #1F2937; margin-bottom: 1.5rem; }
@@ -14,7 +15,7 @@
     .action-btns { display: flex; gap: 0.5rem; }
     .btn { padding: 0.4rem 0.8rem; border-radius: 0.375rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; font-size: 0.875rem; }
     .btn-blue { background-color: #3b82f6; color: #fff; }
-    .btn-yellow { background-color: #f97316; color: #fff; }
+    .btn-yellow { background-color: #eab308; color: #fff; }
     .btn-red { background-color: #ef4444; color: #fff; }
     .alert-success { background-color: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1.5rem; }
     /* Modal Styles */
@@ -82,9 +83,9 @@
                         <td>{{ $member->updated_at->translatedFormat('d F Y') }}</td>
                         <td>
                             <div class="action-btns">
-                                <button type="button" class="btn btn-blue view-btn" data-member='{{ json_encode($member) }}'>Lihat</button>
-                                <button type="button" class="btn btn-yellow edit-btn" data-member='{{ json_encode($member) }}' data-update-url="{{ route('pengurus.anggota.update', $member->id) }}">Edit</button>
-                                <button type="button" class="btn btn-red delete-btn" data-id="{{ $member->id }}">Hapus</button>
+                                <button type="button" class="btn btn-blue view-btn" data-member='{{ json_encode($member) }}'><i class="fas fa-eye"></i></button>
+                                <button type="button" class="btn btn-yellow edit-btn" data-member='{{ json_encode($member) }}' data-update-url="{{ route('pengurus.anggota.update', $member->id) }}"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-red delete-btn" data-id="{{ $member->id }}"><i class="fas fa-trash"></i></button>
                                 <form id="delete-form-{{ $member->id }}" action="{{ route('pengurus.anggota.destroy', $member->id) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
@@ -163,8 +164,8 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn edit-close" style="background-color: #f3f4f6;">Batal</button>
-                <button type="submit" class="btn btn-blue">Simpan Perubahan</button>
+                <button type="button" class="btn edit-close" style="background-color: #f3f4f6;"><i class="fas fa-times"></i> Batal</button>
+                <button type="submit" class="btn btn-blue"><i class="fas fa-save"></i> Simpan</button>
             </div>
         </form>
     </div>
@@ -177,7 +178,7 @@
         <h2>Konfirmasi Hapus</h2>
         <p>Apakah Anda yakin ingin menghapus data anggota ini?</p>
         <div class="modal-footer">
-            <button type="button" id="confirmDeleteBtn" class="btn btn-red">Hapus</button>
+            <button type="button" id="confirmDeleteBtn" class="btn btn-red"><i class="fas fa-trash"></i> Hapus</button>
         </div>
     </div>
 </div>

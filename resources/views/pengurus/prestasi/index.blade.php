@@ -3,6 +3,7 @@
 @section('title', 'Data Prestasi Mahasiswa')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     #prestasi-page {
         --primary-color: #2563eb;
@@ -21,7 +22,7 @@
     .action-btns { display: flex; gap: 0.5rem; }
     .btn { padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
     .btn-primary { background-color: var(--primary-color); color: #fff; }
-    .btn-edit { background-color: #f97316; color: #fff; }
+    .btn-edit { background-color: #eab308; color: #fff; }
     .btn-danger { background-color: var(--danger-color); color: #fff; }
     .btn-success { background-color: var(--success-color); color: #fff; }
     .filter-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
@@ -39,9 +40,9 @@
     <div class="d-flex justify-content-between align-items-center my-4" style="margin-bottom: 1.5rem;">
         <h1>Data Prestasi Mahasiswa</h1>
         <div class="d-flex gap-2">
-            <a href="{{ route('pengurus.prestasi.create') }}" class="btn btn-primary">Tambah Data</a>
-            <a href="{{ route('pengurus.prestasi.exportPdf') }}" class="btn btn-success">Export PDF</a>
-            <a href="{{ route('pengurus.prestasi.exportCsv') }}" class="btn btn-danger">Export CSV</a>
+            <a href="{{ route('pengurus.prestasi.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="{{ route('pengurus.prestasi.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i> Export PDF</a>
+            <a href="{{ route('pengurus.prestasi.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i> Export CSV</a>
         </div>
     </div>
 
@@ -64,7 +65,7 @@
                     <option value="{{ $keterangan }}" {{ request('keterangan') == $keterangan ? 'selected' : '' }}>{{ $keterangan }}</option>
                 @endforeach
             </select>
-            <a href="#" onclick="event.preventDefault(); this.closest('form').submit();" role="button" class="btn btn-primary">Filter</a>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
         </form>
     </div>
 
@@ -95,8 +96,8 @@
                         <td>{{ $prestasi->tingkat_kegiatan }}</td>
                         <td>{{ $prestasi->prestasi_yang_dicapai }}</td>
                         <td class="action-btns">
-                            <a href="{{ route('pengurus.prestasi.edit', $prestasi) }}" class="btn btn-edit">Edit</a>
-                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $prestasi->id }}">Hapus</button>
+                            <a href="{{ route('pengurus.prestasi.edit', $prestasi) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $prestasi->id }}"><i class="fas fa-trash"></i></button>
                             <form id="delete-form-{{ $prestasi->id }}" action="{{ route('pengurus.prestasi.destroy', $prestasi) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')

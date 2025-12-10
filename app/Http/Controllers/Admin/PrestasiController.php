@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Prestasi;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,42 @@ class PrestasiController extends Controller
         $keterangans = ['Akademik', 'Non-Akademik'];
 
         return view('admin.prestasi.index', compact('prestasis', 'tingkat_kegiatans', 'keterangans'));
+    }
+
+    public function saw()
+    {
+        $weightsPath = storage_path('app/saw_weights.json');
+        if (file_exists($weightsPath)) {
+            $weights = json_decode(file_get_contents($weightsPath), true);
+        } else {
+            // Default weights
+            $weights = [
+                'C1' => 0.40, // IPK
+                'C2' => 0.30, // Tingkat Kegiatan
+                'C3' => 0.30, // Prestasi
+            ];
+        }
+
+        return view('admin.prestasi.saw', compact('weights'));
+    }
+
+    public function updateSaw(Request $request)
+    {
+        $validated = $request->validate([
+            'weights' => 'required|array',
+            'weights.*' => 'required|numeric|min:0|max:1',
+        ]);
+
+        $totalWeight = array_sum($validated['weights']);
+
+        if (round($totalWeight, 2) != 1.00) {
+            return back()->withErrors(['weights' => 'Total bobot harus sama dengan 1.'])->withInput();
+        }
+
+        $weightsPath = storage_path('app/saw_weights.json');
+        file_put_contents($weightsPath, json_encode($validated['weights'], JSON_PRETTY_PRINT));
+
+        return redirect()->route('admin.prestasi.saw')->with('success', 'Bobot SAW berhasil diperbarui.');
     }
 
     public function exportPdf()

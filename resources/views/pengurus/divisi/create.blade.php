@@ -20,12 +20,13 @@
             <label for="photo_divisi">Photo Divisi <span style="color: red;">*</span></label>
             <input type="file" id="photo_divisi" name="photo_divisi" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
     </form>
 </div>
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 #divisi-pengurus-create-page .form-group {
     margin-bottom: 1.5rem;

@@ -24,12 +24,12 @@ class UserBeritaController extends Controller
     public function storeKomentar(Request $request, Berita $berita)
     {
         $request->validate([
-            'nama' => 'required',
+            'nama' => auth()->check() ? 'nullable' : 'required',
             'isi_komentar' => 'required',
         ]);
 
         $komentar = new Komentar;
-        $komentar->nama = $request->nama;
+        $komentar->nama = auth()->check() ? auth()->user()->name : $request->nama;
         $komentar->isi_komentar = $request->isi_komentar;
         $komentar->berita_id = $berita->id;
         $komentar->save();

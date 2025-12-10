@@ -5,22 +5,22 @@
   <h1>Dashboard</h1>
 
   <div class="cards-container">
-    <div class="card">
+    <a href="{{ route('admin.users.index') }}" class="card" style="text-decoration: none;">
       <div class="card-icon"><i class="fas fa-user"></i></div>
       <div class="card-info"><h3>Data User</h3><p>{{ $userCount }}</p></div>
-    </div>
-    <div class="card">
+    </a>
+    <a href="{{ route('admin.kelola-anggota-himati.index') }}" class="card" style="text-decoration: none;">
       <div class="card-icon"><i class="fas fa-users"></i></div>
       <div class="card-info"><h3>Data Anggota</h3><p>{{ $anggotaCount }}</p></div>
-    </div>
-    <div class="card">
+    </a>
+    <a href="{{ route('admin.berita.index') }}" class="card" style="text-decoration: none;">
       <div class="card-icon"><i class="fas fa-newspaper"></i></div>
       <div class="card-info"><h3>Data Berita</h3><p>{{ $beritaCount }}</p></div>
-    </div>
-    <div class="card">
+    </a>
+    <a href="{{ route('admin.aspirasi.index') }}" class="card" style="text-decoration: none;">
       <div class="card-icon"><i class="fas fa-envelope"></i></div>
       <div class="card-info"><h3>Data Aspirasi</h3><p>{{ $aspirasiCount }}</p></div>
-    </div>
+    </a>
   </div>
 
  <section class="data-table-container">

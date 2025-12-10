@@ -7,70 +7,73 @@
 
     <section class="data-table-container" style="margin-top:12px">
         <div style="margin-bottom:12px;">
-            <a href="{{ route('admin.berita.create') }}" class="btn-green">Tambah Berita</a>
-        </div>
+    <a href="{{ route('admin.berita.create') }}" class="btn-green">
+        <i class="fas fa-plus"></i> Tambah Berita
+    </a>
+</div>
 
-        @if(session('ok'))
-            <div style="padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#065f46;margin-bottom:12px;">
-                {{ session('ok') }}
-            </div>
-        @endif
-
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>FOTO</th>
-                    <th>JUDUL</th>
-                    <th>DESKRIPSI</th>
-                    <th>WAKTU</th>
-                    <th>AKSI</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($beritas as $berita)
-                    <tr>
-                        <td><img src="{{ asset('storage/' . $berita->foto_berita) }}" alt="Foto Berita" style="width: 100px; height: 60px; object-fit: cover;"></td>
-                        <td>{{ $berita->judul_berita }}</td>
-                        <td style="max-width:320px">{{ Str::limit(strip_tags(html_entity_decode($berita->deskripsi)), 60) }}</td>
-                        <td>{{ $berita->created_at->format('d M Y H:i') }}</td>
-                        <td>
-                            <div style="display: flex; gap: 6px;">
-                                <a class="btn-blue" href="{{ route('admin.berita.show', $berita) }}">Lihat</a>
-                                <a class="btn-yellow" href="{{ route('admin.berita.edit', $berita) }}">Edit</a>
-                                <form action="{{ route('admin.berita.destroy', $berita) }}" method="POST" class="delete-form" style="display:inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button" class="btn-red btn-hapus">Hapus</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5" style="text-align:center;color:#888;">Belum ada berita</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <div style="margin-top:12px;">
-            {{ $beritas->links() }}
-        </div>
-    </section>
-
-    <div id="deleteModal" class="custom-modal">
-        <div class="custom-modal-content" style="max-width: 400px;">
-            <span class="custom-modal-close">&times;</span>
-            <h2>Konfirmasi Hapus</h2>
-            <p>Apakah Anda yakin ingin menghapus berita ini?</p>
-            <div class="modal-footer-buttons">
-                <button type="button" id="confirmDeleteBtn" class="btn-danger">Hapus</button>
-            </div>
-        </div>
+@if(session('ok'))
+    <div style="padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#065f46;margin-bottom:12px;">
+        {{ session('ok') }}
     </div>
+@endif
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>FOTO</th>
+            <th>JUDUL</th>
+            <th>DESKRIPSI</th>
+            <th>WAKTU</th>
+            <th>AKSI</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($beritas as $berita)
+            <tr>
+                <td><img src="{{ asset('storage/' . $berita->foto_berita) }}" alt="Foto Berita" style="width: 100px; height: 60px; object-fit: cover;"></td>
+                <td>{{ $berita->judul_berita }}</td>
+                <td style="max-width:320px">{{ Str::limit(strip_tags(html_entity_decode($berita->deskripsi)), 60) }}</td>
+                <td>{{ $berita->created_at->format('d M Y H:i') }}</td>
+                <td>
+                    <div style="display: flex; gap: 6px;">
+                        <a class="btn-blue" href="{{ route('admin.berita.show', $berita) }}"><i class="fas fa-eye"></i></a>
+                        <a class="btn-yellow" href="{{ route('admin.berita.edit', $berita) }}"><i class="fas fa-edit"></i></a>
+                        <form action="{{ route('admin.berita.destroy', $berita) }}" method="POST" class="delete-form" style="display:inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn-red btn-hapus"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" style="text-align:center;color:#888;">Belum ada berita</td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
+
+<div style="margin-top:12px;">
+    {{ $beritas->links() }}
+</div>
+</section>
+
+<div id="deleteModal" class="custom-modal">
+<div class="custom-modal-content" style="max-width: 400px;">
+    <span class="custom-modal-close">&times;</span>
+    <h2>Konfirmasi Hapus</h2>
+    <p>Apakah Anda yakin ingin menghapus berita ini?</p>
+    <div class="modal-footer-buttons">
+        <button type="button" id="confirmDeleteBtn" class="btn-danger">Hapus</button>
+    </div>
+</div>
+</div>
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .btn-green{background:#22c55e;color:#fff;padding:8px 14px;border-radius:8px;font-weight:600;text-decoration:none}
 .btn-blue{background:#3b82f6;color:#fff;padding:6px 10px;border-radius:6px;text-decoration:none;margin-right:6px;font-weight:600}

@@ -3,6 +3,7 @@
 @section('title', 'Edit Data Prestasi')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     .form-container { max-width: 800px; margin: auto; background-color: #fff; padding: 2rem; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06); }
     .form-group { margin-bottom: 1.5rem; }

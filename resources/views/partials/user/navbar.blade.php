@@ -6,7 +6,7 @@
         <ul>
             <li class="{{ request()->is('/') || request()->is('user/beranda') ? 'active' : '' }}"><a href="{{ route('user.beranda') }}">HOME</a></li>
             <li class="{{ request()->is('user/divisi*') ? 'active' : '' }}"><a href="{{ route('user.divisi') }}">DIVISI</a></li>
-            <li class="{{ request()->is('user/profil*') ? 'active' : '' }}"><a href="{{ route('user.profil') }}">PROFIL</a></li>
+            <li class="{{ request()->routeIs('user.profil') ? 'active' : '' }}"><a href="{{ route('user.profil') }}">PROFIL</a></li>
             <li class="{{ request()->is('user/berita*') ? 'active' : '' }}"><a href="{{ route('user.berita') }}">BERITA</a></li>
             <li class="{{ request()->is('user/pendaftaran') ? 'active' : '' }}"><a href="{{ route('user.pendaftaran') }}">PENDAFTARAN</a></li>
             <li class="{{ request()->is('user/prestasi') ? 'active' : '' }}"><a href="{{ route('user.prestasi') }}">PRESTASI MAHASISWA</a></li>

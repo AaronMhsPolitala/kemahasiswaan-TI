@@ -3,6 +3,7 @@
 @section('title', 'Pengaturan Website & Status Pendaftaran')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     .settings-container {
         display: flex;
@@ -193,7 +194,7 @@
                 </div>
             </div>
             <div style="text-align: right;">
-                <button class="btn-primary" type="submit">Simpan Status</button>
+                <button class="btn-primary" type="submit"><i class="fas fa-save"></i> Simpan Status</button>
             </div>
         </form>
 
@@ -248,7 +249,7 @@
                 <div class="logo-upload">
                     <img id="logoPreview" class="logo-preview" alt="Logo saat ini" src="{{ isset($settings['logo']) ? asset($settings['logo']->value) : 'https://via.placeholder.com/120x120.png?text=Logo' }}">
                     <div>
-                        <label for="logoInput" class="btn-primary">Ubah Logo</label>
+                        <label for="logoInput" class="btn-primary"><i class="fas fa-upload"></i> Ubah Logo</label>
                         <input id="logoInput" type="file" name="logo" accept="image/*" class="hidden">
                         <p class="form-hint" id="fileName">Pilih file gambar (PNG/JPG, maks 2MB)</p>
                     </div>
@@ -256,7 +257,7 @@
             </div>
 
             <div style="text-align: right;">
-                <button class="btn-primary" type="submit">Simpan Perubahan</button>
+                <button class="btn-primary" type="submit"><i class="fas fa-save"></i> Simpan Perubahan</button>
             </div>
         </form>
     </div>
