@@ -162,6 +162,7 @@
                 </div>
             </div>
             <div class="modal-footer-buttons">
+                <a href="#" id="view_berkas_button" class="btn btn-info" target="_blank" style="margin-right:auto;"><i class="fas fa-file-alt"></i> Lihat Berkas</a>
                 <form id="failInterviewForm" method="POST" style="display:inline;">
                     @csrf
                     <button type="submit" class="btn-danger"><i class="fas fa-times"></i> Gagal</button>
@@ -178,6 +179,8 @@
 
 @push('scripts')
 <script>
+    const STORAGE_URL = '{{ asset('storage') }}';
+
 document.addEventListener('DOMContentLoaded', function() {
     const page = document.getElementById('calon-anggota-page');
     if (!page) return;

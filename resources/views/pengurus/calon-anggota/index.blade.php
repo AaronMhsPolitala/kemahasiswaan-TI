@@ -207,6 +207,8 @@
 
 @push('scripts')
 <script>
+    const STORAGE_URL = '{{ asset('storage') }}';
+
 document.addEventListener('DOMContentLoaded', function() {
     const page = document.getElementById('calon-anggota-page');
     if (!page) return;

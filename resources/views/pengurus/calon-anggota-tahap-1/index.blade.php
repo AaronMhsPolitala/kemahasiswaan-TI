@@ -234,6 +234,7 @@
                 </div>
             </div>
             <div class="modal-footer-buttons">
+                <a href="#" id="view_berkas_button" class="btn btn-info" target="_blank" style="margin-right:auto;"><i class="fas fa-file-alt"></i> Lihat Berkas</a>
                 <form id="deleteFormInModal" method="POST" action="">
                     @csrf
                     @method('DELETE')
@@ -279,6 +280,15 @@ document.addEventListener('DOMContentLoaded', function() {
             page.querySelector('#view_divisi').textContent = btn.dataset.divisi;
             page.querySelector('#view_alasan_bergabung').textContent = data.alasan_bergabung;
             page.querySelector('#view_status').textContent = btn.dataset.status;
+
+            // Logika untuk tombol Lihat Berkas
+            const viewBerkasButton = page.querySelector('#view_berkas_button');
+            if (data.berkas_pendaftaran) {
+                viewBerkasButton.href = `${STORAGE_URL}/${data.berkas_pendaftaran}`;
+                viewBerkasButton.style.display = 'inline-block';
+            } else {
+                viewBerkasButton.style.display = 'none';
+            }
 
             const deleteForm = document.getElementById('deleteFormInModal');
             if (deleteForm) {

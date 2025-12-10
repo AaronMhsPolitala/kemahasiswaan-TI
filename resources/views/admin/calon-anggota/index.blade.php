@@ -178,6 +178,7 @@
                 </div>
             </div>
             <div class="modal-footer-buttons">
+                <a href="#" id="view_berkas_button" class="btn btn-info" target="_blank" style="margin-right:10px;"><i class="fas fa-file-alt"></i> Lihat Berkas</a>
                 <form id="approveForm" method="POST" style="display:inline;" onsubmit="return confirm('Anda yakin ingin MENERIMA calon ini? Notifikasi WA akan dikirim.');">
                     @csrf
                     <button type="submit" class="btn-success"><i class="fas fa-check"></i> Terima</button>
@@ -206,6 +207,8 @@
 
 @push('scripts')
 <script>
+    const STORAGE_URL = '{{ asset('storage') }}';
+
 document.addEventListener('DOMContentLoaded', function() {
     const page = document.getElementById('calon-anggota-page');
     if (!page) return;
@@ -235,6 +238,15 @@ document.addEventListener('DOMContentLoaded', function() {
             page.querySelector('#view_divisi').textContent = data.divisi ? data.divisi.nama_divisi : 'N/A';
             page.querySelector('#view_alasan_bergabung').textContent = data.alasan_bergabung;
             page.querySelector('#view_status').textContent = data.status;
+
+            // Logika untuk tombol Lihat Berkas
+            const viewBerkasButton = page.querySelector('#view_berkas_button');
+            if (data.berkas_pendaftaran) {
+                viewBerkasButton.href = `${STORAGE_URL}/${data.berkas_pendaftaran}`;
+                viewBerkasButton.style.display = 'inline-block';
+            } else {
+                viewBerkasButton.style.display = 'none';
+            }
 
             const approveForm = page.querySelector('#approveForm');
             const rejectForm = page.querySelector('#rejectForm');
