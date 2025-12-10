@@ -37,7 +37,7 @@ class PengaduanController extends Controller
     public function exportPdf()
     {
         $pengaduans = Pengaduan::all();
-        $pdf = PDF::loadView('admin.bermasalah.pdf', compact('pengaduans'));
+        $pdf = PDF::loadView('admin.bermasalah.pdf', compact('pengaduans'))->setPaper('a4', 'landscape');
         return $pdf->download('laporan-mahasiswa-bermasalah.pdf');
     }
 

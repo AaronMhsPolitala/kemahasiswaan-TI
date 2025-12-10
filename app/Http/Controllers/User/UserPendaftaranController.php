@@ -34,16 +34,24 @@ class UserPendaftaranController extends Controller
             'divisi_id' => 'required|exists:divisis,id',
             'alasan' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'berkas_pendaftaran' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120', // 5MB Max
         ], [
             'nim.numeric' => 'NIM harus berupa angka.',
             'nim.unique' => 'NIM ini sudah terdaftar.',
             'hp.numeric' => 'Nomor HP harus berupa angka.',
             'hp.unique' => 'Nomor HP ini sudah terdaftar.',
+            'berkas_pendaftaran.required' => 'Berkas pendaftaran wajib diunggah.',
+            'berkas_pendaftaran.mimes' => 'Format berkas harus PDF, DOC, DOCX, atau ZIP.',
         ]);
 
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
-            $gambarPath = $request->file('gambar')->store('pendaftaran', 'public');
+            $gambarPath = $request->file('gambar')->store('pendaftaran-photos', 'public');
+        }
+
+        $berkasPath = null;
+        if ($request->hasFile('berkas_pendaftaran')) {
+            $berkasPath = $request->file('berkas_pendaftaran')->store('pendaftaran-files', 'public');
         }
 
         Pendaftaran::create([
@@ -53,6 +61,7 @@ class UserPendaftaranController extends Controller
             'divisi_id' => $request->divisi_id,
             'alasan_bergabung' => $request->alasan,
             'gambar' => $gambarPath,
+            'berkas_pendaftaran' => $berkasPath,
         ]);
 
         return redirect()->route('user.pendaftaran')->with('success', 'Pendaftaran berhasil! Terima kasih telah mendaftar.')->withFragment('pendaftaran-form');

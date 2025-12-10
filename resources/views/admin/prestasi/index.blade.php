@@ -42,8 +42,8 @@
         <h1>Data Prestasi Mahasiswa</h1>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.prestasi.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a>
-            <a href="{{ route('admin.prestasi.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i> Export PDF</a>
-            <a href="{{ route('admin.prestasi.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i> Export CSV</a>
+            <a href="{{ route('admin.prestasi.exportPdf') }}" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Export PDF</a>
+            <a href="{{ route('admin.prestasi.exportCsv') }}" class="btn btn-success"><i class="fas fa-file-csv"></i> Export CSV</a>
             <a href="{{ route('admin.prestasi.saw') }}" class="btn btn-warning"><i class="fas fa-balance-scale"></i> Bobot</a>
         </div>
     </div>

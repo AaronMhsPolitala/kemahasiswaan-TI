@@ -47,8 +47,8 @@
         <h1>Data Mahasiswa Bermasalah</h1>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.mahasiswa-bermasalah.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Data</a>
-            <a href="{{ route('admin.mahasiswa-bermasalah.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i> Export PDF</a>
-            <a href="{{ route('admin.mahasiswa-bermasalah.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i> Export CSV</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportPdf') }}" class="btn btn-danger"><i class="fas fa-file-pdf"></i> Export PDF</a>
+            <a href="{{ route('admin.mahasiswa-bermasalah.exportCsv') }}" class="btn btn-success"><i class="fas fa-file-csv"></i> Export CSV</a>
         </div>
     </div>
 

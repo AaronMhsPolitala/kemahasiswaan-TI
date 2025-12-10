@@ -482,6 +482,27 @@
                     @enderror
                 </div>
 
+                <div class="col-md-6">
+                    <label for="berkas_pendaftaran" class="form-label">
+                        <i class="fa-solid fa-file-alt"></i>
+                        Upload Berkas <span class="required">*</span>
+                    </label>
+                    <input
+                        type="file"
+                        id="berkas_pendaftaran"
+                        name="berkas_pendaftaran"
+                        class="form-control @error('berkas_pendaftaran') is-invalid @enderror"
+                        accept="image/*"
+                        required
+                    />
+                    <div class="text-muted small mt-1">
+                        Upload berkas pendukung (contoh: Kartu Tanda Mahasiswa (KTM)) dalam format gambar (JPEG, PNG, JPG, GIF, SVG, maks 5MB).
+                    </div>
+                    @error('berkas_pendaftaran')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <!-- Alasan Bergabung dipindah ke bawah dan dibuat full width -->
                 <div class="col-12">
                     <label for="alasan" class="form-label">

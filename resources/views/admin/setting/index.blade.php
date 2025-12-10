@@ -247,7 +247,7 @@
             <div class="form-group">
                 <label class="form-label">Logo/Foto <span style="color: red;">*</span></label>
                 <div class="logo-upload">
-                    <img id="logoPreview" class="logo-preview" alt="Logo saat ini" src="{{ isset($settings['logo']) ? asset($settings['logo']->value) : 'https://via.placeholder.com/120x120.png?text=Logo' }}">
+                    <img id="logoPreview" class="logo-preview" alt="Logo saat ini" src="{{ isset($settings['logo']) && $settings['logo']->value ? Storage::url($settings['logo']->value) : 'https://via.placeholder.com/120x120.png?text=Logo' }}">
                     <div>
                         <label for="logoInput" class="btn-primary"><i class="fas fa-upload"></i> Ubah Logo</label>
                         <input id="logoInput" type="file" name="logo" accept="image/*" class="hidden">

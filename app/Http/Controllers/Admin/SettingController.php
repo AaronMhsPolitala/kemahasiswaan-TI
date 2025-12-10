@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -29,11 +30,12 @@ class SettingController extends Controller
 
     public function updateProfile(Request $request)
     {
+        // 1. Validasi (Semua opsional)
         $rules = [
-            'site_name' => 'required|string|max:255',
-            'visi' => 'required|string',
-            'misi' => 'required|string',
-            'deskripsi' => 'required|string',
+            'site_name' => 'nullable|string|max:255',
+            'visi' => 'nullable|string',
+            'misi' => 'nullable|string',
+            'deskripsi' => 'nullable|string',
             'nama_ketua' => 'nullable|string|max:255',
             'nama_wakil' => 'nullable|string|max:255',
             'nama_sekretaris' => 'nullable|string|max:255',
@@ -41,37 +43,35 @@ class SettingController extends Controller
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
 
-        // Jika tidak ada logo yang sudah ada di database, maka logo wajib diisi
-        $currentLogo = Setting::where('key', 'logo')->first();
-        if (! $currentLogo || ! $currentLogo->value) {
-            $rules['logo'] = 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048';
-        }
-
         $request->validate($rules);
 
-        $data = $request->only(['site_name', 'visi', 'misi', 'deskripsi', 'nama_ketua', 'nama_wakil', 'nama_sekretaris', 'nama_bendahara']);
-
-        foreach ($data as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
-            );
+        // 2. Simpan pengaturan teks satu per satu jika ada di request
+        $textSettings = ['site_name', 'visi', 'misi', 'deskripsi', 'nama_ketua', 'nama_wakil', 'nama_sekretaris', 'nama_bendahara'];
+        foreach ($textSettings as $key) {
+            if ($request->filled($key)) {
+                Setting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $request->input($key)]
+                );
+            }
         }
 
+        // 3. Handle upload logo
         if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = time().'_'.$file->getClientOriginalName();
+            $currentLogo = Setting::where('key', 'logo')->first();
             // Hapus logo lama jika ada
             if ($currentLogo && $currentLogo->value) {
                 Storage::disk('public')->delete($currentLogo->value);
             }
-            $file->move(public_path('uploads/logos'), $filename);
+            // Simpan logo baru
+            $path = $request->file('logo')->store('logos', 'public');
             Setting::updateOrCreate(
                 ['key' => 'logo'],
-                ['value' => 'uploads/logos/'.$filename]
+                ['value' => $path]
             );
         }
 
+        // 4. Kembalikan dengan pesan sukses
         return back()->with('success', 'Profil website berhasil diperbarui.');
     }
 }
