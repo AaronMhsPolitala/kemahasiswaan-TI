@@ -209,6 +209,15 @@ document.addEventListener('DOMContentLoaded', function() {
             page.querySelector('#view_alasan_bergabung').textContent = data.alasan_bergabung;
             page.querySelector('#view_status').textContent = data.status === 'Approved Stage 1' ? 'Lolos Tahap 1' : data.status;
 
+            // Logika untuk tombol Lihat Berkas
+            const viewBerkasButton = page.querySelector('#view_berkas_button');
+            if (data.berkas_pendaftaran) {
+                viewBerkasButton.href = `${STORAGE_URL}/${data.berkas_pendaftaran}`;
+                viewBerkasButton.style.display = 'inline-block';
+            } else {
+                viewBerkasButton.style.display = 'none';
+            }
+
             // Set form actions
             const passForm = page.querySelector('#passInterviewForm');
             const failForm = page.querySelector('#failInterviewForm');
