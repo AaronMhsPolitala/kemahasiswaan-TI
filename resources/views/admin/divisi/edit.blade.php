@@ -24,6 +24,7 @@
                 <img src="{{ Storage::url($divisi->photo_divisi) }}" alt="{{ $divisi->nama_divisi }}" width="100" class="mt-2">
             @endif
         </div>
+        <a href="{{ route('admin.divisi.index') }}" class="btn btn-secondary me-2"><i class="fas fa-arrow-left"></i> Kembali</a>
         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
     </form>
 </div>

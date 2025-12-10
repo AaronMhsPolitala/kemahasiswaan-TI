@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Divisi;
 use App\Models\Pendaftaran;
 use App\Rules\JabatanRule;
+use App\Models\Setting;
 use App\Services\FonnteService; // Import FonnteService
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // Import Log
@@ -114,7 +115,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_diterima.txt');
+        $template = Setting::where('key', 'pesan_diterima')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
@@ -137,7 +138,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_ditolak.txt');
+        $template = Setting::where('key', 'pesan_ditolak')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
@@ -160,7 +161,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_diterima_tahap2.txt');
+        $template = Setting::where('key', 'pesan_diterima_tahap2')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
@@ -183,7 +184,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_ditolak_tahap2.txt');
+        $template = Setting::where('key', 'pesan_ditolak_tahap2')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
@@ -206,7 +207,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_lolos_wawancara.txt');
+        $template = Setting::where('key', 'pesan_lolos_wawancara')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],
@@ -229,7 +230,7 @@ class AnggotaController extends Controller
         $pendaftaran->save();
 
         // Kirim notifikasi WhatsApp
-        $template = Storage::disk('local')->get('wa_template_gagal_wawancara.txt');
+        $template = Setting::where('key', 'pesan_gagal_wawancara')->value('value');
         $message = str_replace(
             ['{nama}', '{nim}', '{divisi}'],
             [$pendaftaran->nama, $pendaftaran->nim, $pendaftaran->divisi->nama_divisi],

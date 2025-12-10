@@ -65,24 +65,53 @@
     #calon-anggota-page .custom-modal-content { background-color: #fefefe; margin: 5% auto; padding: 24px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 12px; position: relative; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
     #calon-anggota-page .custom-modal-close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
     #calon-anggota-page .custom-modal-close:hover, #calon-anggota-page .custom-modal-close:focus { color: black; text-decoration: none; }
-    #calon-anggota-page .modal-body-content { padding-top: 20px; }
+    #calon-anggota-page .modal-body-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem 0;
+    }
+    #calon-anggota-page .user-photo-container {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid #e5e7eb;
+    }
+    #calon-anggota-page .user-photo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #calon-anggota-page .user-details-container {
+        width: 100%;
+        max-width: 400px; /* Sedikit lebih lebar */
+    }
     #calon-anggota-page .candidate-info {
         display: grid;
-        grid-template-columns: 160px auto;
-        gap: 0 1rem;
-        margin-bottom: 0.75rem;
+        grid-template-columns: 140px auto; /* Lebar kolom label */
+        gap: 1rem;
+        padding: 0.75rem 0;
         font-size: 1rem;
-        align-items: start;
+        align-items: center;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    #calon-anggota-page .candidate-info:last-child {
+        border-bottom: none;
     }
     #calon-anggota-page .candidate-info strong {
         font-weight: 600;
         color: #4b5563;
-        position: relative;
+        display: flex;
+        justify-content: space-between; /* Membuat titik dua rata kanan */
     }
     #calon-anggota-page .candidate-info strong::after {
-        content: ':';
-        position: absolute;
-        right: 0;
+        content: ':'; /* Hanya titik dua */
+    }
+    #calon-anggota-page .candidate-info span {
+        font-weight: 500;
+        color: #1f2937;
     }
     #calon-anggota-page .modal-footer-buttons { text-align: right; margin-top: 20px; }
     #calon-anggota-page .modal-footer-buttons button { margin-left: 10px; padding: 10px 18px; border-radius: 8px; cursor: pointer; border: none; font-weight: 600; }
@@ -192,15 +221,17 @@
             <span class="custom-modal-close">&times;</span>
             <h2>Detail Calon Anggota Tahap 1</h2>
             <div class="modal-body-content">
-                <div style="text-align: center; margin-bottom: 1rem;">
-                    <img id="view_gambar" src="" alt="Foto Calon Anggota" style="max-width: 200px; max-height: 200px; object-fit: cover; border-radius: 8px; margin: auto;">
+                <div class="user-photo-container">
+                    <img id="view_gambar" src="" alt="Foto Calon Anggota">
                 </div>
-                <div class="candidate-info"><strong>Nama</strong> <span id="view_name"></span></div>
-                <div class="candidate-info"><strong>NIM</strong> <span id="view_nim"></span></div>
-                <div class="candidate-info"><strong>Nomor HP</strong> <span id="view_hp"></span></div>
-                <div class="candidate-info"><strong>Divisi Tujuan</strong> <span id="view_divisi"></span></div>
-                <div class="candidate-info"><strong>Alasan Bergabung</strong> <span id="view_alasan_bergabung"></span></div>
-                <div class="candidate-info"><strong>Status</strong> <span id="view_status"></span></div>
+                <div class="user-details-container">
+                    <div class="candidate-info"><strong>Nama</strong> <span id="view_name"></span></div>
+                    <div class="candidate-info"><strong>NIM</strong> <span id="view_nim"></span></div>
+                    <div class="candidate-info"><strong>Nomor HP</strong> <span id="view_hp"></span></div>
+                    <div class="candidate-info"><strong>Divisi Tujuan</strong> <span id="view_divisi"></span></div>
+                    <div class="candidate-info"><strong>Alasan Bergabung</strong> <span id="view_alasan_bergabung"></span></div>
+                    <div class="candidate-info"><strong>Status Saat Ini</strong> <span id="view_status"></span></div>
+                </div>
             </div>
             <div class="modal-footer-buttons">
                 <form id="deleteFormInModal" method="POST" action="">
@@ -246,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             page.querySelector('#view_nim').textContent = data.nim;
             page.querySelector('#view_hp').textContent = data.hp;
             page.querySelector('#view_divisi').textContent = btn.dataset.divisi;
-            page.querySelector('#view_alasan_bergabung').textContent = data.alasan;
+            page.querySelector('#view_alasan_bergabung').textContent = data.alasan_bergabung;
             page.querySelector('#view_status').textContent = btn.dataset.status;
 
             const deleteForm = document.getElementById('deleteFormInModal');

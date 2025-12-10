@@ -86,7 +86,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end">
-                                    <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-lg me-2">Batal</a>
+                                    <a href="{{ route('user.beranda') }}" class="btn btn-outline-secondary btn-lg me-2">Kembali</a>
                                     <button type="submit" class="btn btn-primary btn-lg">Simpan Perubahan</button>
                                 </div>
 

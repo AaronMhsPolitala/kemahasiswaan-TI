@@ -24,10 +24,61 @@
 .form-control { display: block; width: 100%; padding: .75rem; font-size: 1rem; line-height: 1.5; color: #495057; background-color: #fff; background-clip: padding-box; border: 1px solid #ced4da; border-radius: .25rem; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; }
 .form-control:focus { color: #495057; background-color: #fff; border-color: #80bdff; outline: 0; box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25); }
 .btn-primary { color: #fff; background-color: #007bff; border-color: #007bff; }
+
+/* Styling for View Modal */
+#pengurus-users-page .modal-body-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Membuat semua item di tengah */
+    gap: 1.5rem; /* Jarak antara foto dan detail */
+    padding: 1.5rem 0;
+}
+#pengurus-users-page .user-photo-container {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #e5e7eb;
+}
+#pengurus-users-page .user-photo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+#pengurus-users-page .user-details-container {
+    width: 100%;
+    max-width: 350px; /* Sedikit lebih lebar */
+}
+#pengurus-users-page .candidate-info {
+    display: grid;
+    grid-template-columns: 100px auto; /* Label lebih pendek */
+    gap: 1rem;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6; /* Garis pemisah tipis */
+}
+#pengurus-users-page .candidate-info:last-child {
+    border-bottom: none;
+}
+#pengurus-users-page .candidate-info strong {
+    font-weight: 600;
+    color: #4b5563;
+    display: flex;
+    justify-content: space-between; /* Membuat titik dua rata kanan */
+}
+#pengurus-users-page .candidate-info strong::after {
+    content: ':'; /* Hanya titik dua */
+}
+#pengurus-users-page .candidate-info span {
+    font-weight: 500;
+    color: #1f2937;
+}
 </style>
 @endpush
 
 @section('content')
+<div id="pengurus-users-page">
   <h1>Kelola Pengguna</h1>
 
   @if(session('success'))
@@ -99,12 +150,16 @@
   <div class="custom-modal-content">
     <span class="custom-modal-close">&times;</span>
     <h2>Detail Pengguna</h2>
-    <div style="padding-top:1rem; text-align: center;">
-        <img id="view_photo" src="" alt="Photo" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; object-fit: cover;">
-        <p><strong>Nama:</strong> <span id="view_name"></span></p>
-        <p><strong>Email:</strong> <span id="view_email"></span></p>
-        <p><strong>No. WA:</strong> <span id="view_no_wa"></span></p>
-        <p><strong>Role:</strong> <span id="view_role"></span></p>
+    <div class="modal-body-content">
+        <div class="user-photo-container">
+            <img id="view_photo" src="" alt="Photo">
+        </div>
+        <div class="user-details-container">
+            <div class="candidate-info"><strong>Nama</strong> <span id="view_name"></span></div>
+            <div class="candidate-info"><strong>Email</strong> <span id="view_email"></span></div>
+            <div class="candidate-info"><strong>No. WA</strong> <span id="view_no_wa"></span></div>
+            <div class="candidate-info"><strong>Role</strong> <span id="view_role"></span></div>
+        </div>
     </div>
   </div>
 </div>
