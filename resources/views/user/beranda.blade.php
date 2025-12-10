@@ -32,16 +32,10 @@
                                         </svg>
                                         Jelajahi Divisi Kami
                                     </a>
-                                    <span class="hero-subinfo">
-                                        Kenali struktur, divisi, dan agenda kegiatan HMTI secara terpusat.
-                                    </span>
                                 </div>
             
                                 <div class="hero-stats">
-                                    <div class="hero-stat">
-                                        <div class="hero-stat-label">Acara Terpantau</div>
-                                        <div class="hero-stat-value">Event HMTI &amp; Prodi TI</div>
-                                    </div>
+
                                     <div class="hero-stat">
                                         <div class="hero-stat-label">Informasi Akademik</div>
                                         <div class="hero-stat-value">Program Studi TI D3</div>
@@ -51,6 +45,8 @@
                                         <div class="hero-stat-value">Satu pintu pengaduan</div>
                                     </div>
                                 </div>
+            
+
                             </div>
                             <div class="hero-logo-wrapper">
                                 <img src="{{ asset('assets/image/Logo_Politala_segi_lima.png') }}" alt="Logo Politala" class="hero-logo">

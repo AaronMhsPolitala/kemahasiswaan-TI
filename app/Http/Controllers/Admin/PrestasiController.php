@@ -105,7 +105,7 @@ class PrestasiController extends Controller
         // Urutkan juga berdasarkan SAW
         $prestasis = Prestasi::all()->sortByDesc('total_skor');
 
-        $pdf = PDF::loadView('admin.prestasi.pdf', compact('prestasis'));
+        $pdf = PDF::loadView('admin.prestasi.pdf', compact('prestasis'))->setPaper('a4', 'landscape');
         return $pdf->download('laporan-prestasi.pdf');
     }
 

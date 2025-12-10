@@ -58,7 +58,7 @@ class AnggotaController extends Controller
     public function exportPdfTahap1()
     {
         $candidates = Pendaftaran::whereIn('status', ['diterima', 'ditolak', 'Gagal Wawancara', 'Lulus Wawancara'])->get();
-        $pdf = PDF::loadView('admin.calon-anggota-tahap-1.pdf', compact('candidates'));
+        $pdf = PDF::loadView('admin.calon-anggota-tahap-1.pdf', compact('candidates'))->setPaper('a4', 'landscape');
         return $pdf->download('laporan-calon-anggota-tahap-1.pdf');
     }
 

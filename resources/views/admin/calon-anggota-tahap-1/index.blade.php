@@ -121,10 +121,10 @@
                 @endforeach
             </select>
 
-            <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i></button>
-            <a href="{{ route('admin.calon-anggota-tahap-1.index') }}" class="btn btn-secondary"><i class="fas fa-sync"></i></a>
-            <a href="{{ route('admin.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-success"><i class="fas fa-file-pdf"></i></a>
-            <a href="{{ route('admin.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-danger"><i class="fas fa-file-csv"></i></a>
+            <button type="submit" class="btn btn-primary" title="Filter Data"><i class="fas fa-filter"></i></button>
+            <a href="{{ route('admin.calon-anggota-tahap-1.index') }}" class="btn btn-secondary" title="Reset Filter"><i class="fas fa-sync"></i></a>
+            <a href="{{ route('admin.calon-anggota-tahap-1.exportPdf') }}" class="btn btn-danger" title="Export ke PDF"><i class="fas fa-file-pdf"></i></a>
+            <a href="{{ route('admin.calon-anggota-tahap-1.exportCsv') }}" class="btn btn-success" title="Export ke CSV"><i class="fas fa-file-csv"></i></a>
         </form>
     </div>
 
@@ -169,7 +169,7 @@
                         </td>
                         <td>
                             <div class="action-btns">
-                                <button type="button" class="btn-lihat" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'><i class="fas fa-eye"></i></button>
+                                <button type="button" class="btn-lihat" title="Lihat Detail" data-candidate='{{ json_encode($candidate) }}' data-divisi='{{ $candidate->divisi->nama_divisi ?? "N/A" }}' data-status='{{ $statuses[$candidate->status] ?? $candidate->status }}'><i class="fas fa-eye"></i></button>
                             </div>
                         </td>
                     </tr>

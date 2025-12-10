@@ -3,14 +3,23 @@
 <head>
     <title>Laporan Prestasi</title>
     <style>
+        body {
+            font-family: sans-serif;
+            font-size: 10px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
             border: 1px solid black;
-            padding: 8px;
+            padding: 5px;
             text-align: left;
+            word-wrap: break-word;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>

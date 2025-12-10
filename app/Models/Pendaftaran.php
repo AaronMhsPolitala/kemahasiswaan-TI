@@ -15,6 +15,7 @@ class Pendaftaran extends Model
         'alasan_bergabung',
         'status',
         'gambar',
+        'berkas_pendaftaran',
         'jabatan',
     ];
 
