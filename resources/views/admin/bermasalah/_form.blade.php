@@ -1,7 +1,7 @@
 @csrf
 
 <div class="form-group">
-    <label for="nim">NIM</label>
+    <label for="nim">NIM Pelapor</label>
     <input type="text" id="nim" name="nim" class="form-control @error('nim') is-invalid @enderror" placeholder="Masukkan NIM Anda" value="{{ old('nim', $pengaduan->nim ?? '') }}" {{ isset($pengaduan) && $pengaduan->anonim ? 'disabled' : '' }} required>
     @error('nim')
         <div class="invalid-feedback">{{ $message }}</div>
@@ -9,20 +9,36 @@
 </div>
 
 <div class="form-group">
-    <label for="nama">Nama Lengkap</label>
-    <input type="text" id="nama" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Masukkan nama lengkap Anda" value="{{ old('nama', $pengaduan->nama ?? '') }}" {{ isset($pengaduan) && $pengaduan->anonim ? 'disabled' : '' }} required>
+    <label for="nama">Nama Pelapor</label>
+    <input type="text" id="nama" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Masukkan nama lengkap Anda" value="{{ old('nama', $pengaduan->nama ?? '') }}" required>
     @error('nama')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 
+<div class="col-12">
+    <hr class="my-3">
+    <h5 class="subtitle" style="font-size: 1.1rem; color: var(--text-main); font-weight: 600;">Pihak yang Dilaporkan</h5>
+</div>
+
 <div class="form-group">
-    <label for="semester">Semester</label>
-    <input type="number" id="semester" name="semester" class="form-control @error('semester') is-invalid @enderror" min="1" placeholder="Contoh: 5" value="{{ old('semester', $pengaduan->semester ?? '') }}" {{ isset($pengaduan) && $pengaduan->anonim ? 'disabled' : '' }} required>
-    @error('semester')
+    <label for="nama_terlapor">Nama Terlapor</label>
+    <input type="text" id="nama_terlapor" name="nama_terlapor" class="form-control @error('nama_terlapor') is-invalid @enderror" placeholder="Nama Mahasiswa yang dilaporkan" value="{{ old('nama_terlapor', $pengaduan->nama_terlapor ?? '') }}" required>
+    @error('nama_terlapor')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
+
+<div class="form-group">
+    <label for="nim_terlapor">NIM Terlapor</label>
+    <input type="text" id="nim_terlapor" name="nim_terlapor" class="form-control @error('nim_terlapor') is-invalid @enderror" placeholder="NIM Mahasiswa yang dilaporkan" value="{{ old('nim_terlapor', $pengaduan->nim_terlapor ?? '') }}" required>
+    @error('nim_terlapor')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+<input type="hidden" name="status_terlapor" value="Mahasiswa">
+
+
 
 <div class="form-group">
     <label for="jenis_masalah">Jenis Masalah</label>
@@ -40,20 +56,14 @@
 </div>
 
 <div class="form-group">
-    <label for="keterangan">Keterangan / Deskripsi Masalah</label>
+    <label for="keterangan">Jenis Pelanggaran / Keterangan Tambahan</label>
     <textarea id="keterangan" name="keterangan" class="form-control @error('keterangan') is-invalid @enderror" rows="4" placeholder="Jelaskan masalah yang ingin Anda laporkan" required>{{ old('keterangan', $pengaduan->keterangan ?? '') }}</textarea>
     @error('keterangan')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 
-<div class="form-group">
-    <label for="kontak_pengadu">Kontak (Email / No HP)</label>
-    <input type="text" id="kontak_pengadu" name="kontak_pengadu" class="form-control @error('kontak_pengadu') is-invalid @enderror" placeholder="Opsional - untuk dihubungi admin" value="{{ old('kontak_pengadu', $pengaduan->kontak_pengadu ?? '') }}">
-    @error('kontak_pengadu')
-        <div class="invalid-feedback">{{ $message }}</div>
-    @enderror
-</div>
+
 
 <div class="form-group">
     <label for="status">Status</label>

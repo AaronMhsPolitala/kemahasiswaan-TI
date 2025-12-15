@@ -17,7 +17,9 @@ class PengaduanController extends Controller
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('nim', 'like', '%'.$request->search.'%')
-                    ->orWhere('nama', 'like', '%'.$request->search.'%');
+                    ->orWhere('nama', 'like', '%'.$request->search.'%')
+                    ->orWhere('nim_terlapor', 'like', '%'.$request->search.'%')
+                    ->orWhere('nama_terlapor', 'like', '%'.$request->search.'%');
             });
         }
 
@@ -53,20 +55,23 @@ class PengaduanController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('NIM', 'Nama', 'Jenis Masalah', 'Keterangan', 'Status');
+        $columns = array('NIM Pelapor', 'Nama Pelapor', 'NIM Terlapor', 'Nama Terlapor', 'Status Terlapor', 'Jenis Masalah', 'Jenis Pelanggaran / Keterangan', 'Status');
 
         $callback = function() use($pengaduans, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($pengaduans as $pengaduan) {
-                $row['NIM']  = $pengaduan->nim;
-                $row['Nama']    = $pengaduan->nama;
-                $row['Jenis Masalah']    = $pengaduan->jenis_masalah;
-                $row['Keterangan']  = $pengaduan->keterangan;
-                $row['Status']  = $pengaduan->status;
-
-                fputcsv($file, array($row['NIM'], $row['Nama'], $row['Jenis Masalah'], $row['Keterangan'], $row['Status']));
+                fputcsv($file, [
+                    $pengaduan->nim ?? 'Anonim',
+                    $pengaduan->nama ?? 'Anonim',
+                    $pengaduan->nim_terlapor ?? 'N/A',
+                    $pengaduan->nama_terlapor ?? 'N/A',
+                    $pengaduan->status_terlapor ?? 'N/A',
+                    $pengaduan->jenis_masalah,
+                    $pengaduan->keterangan,
+                    $pengaduan->status
+                ]);
             }
 
             fclose($file);
@@ -96,47 +101,38 @@ class PengaduanController extends Controller
     public function update(Request $request, Pengaduan $mahasiswa_bermasalah)
     {
         $request->validate([
-            'nim' => 'required_if:anonim,false|string|max:255',
-            'nama' => 'required_if:anonim,false|string|max:255',
-            'semester' => 'required_if:anonim,false|integer|min:1',
-            'jenis_masalah' => 'required|string|max:255',
-            'keterangan' => 'required|string',
-            'kontak_pengadu' => 'nullable|string|max:255',
             'status' => 'required|string|in:pending,ditanggapi,selesai',
         ]);
 
-        $mahasiswa_bermasalah->update($request->all());
+        $mahasiswa_bermasalah->update(['status' => $request->status]);
 
-        return redirect()->route('admin.mahasiswa-bermasalah.index')->with('success', 'Data pengaduan berhasil diperbarui.');
+        return redirect()->route('admin.mahasiswa-bermasalah.index')->with('success', 'Status pengaduan berhasil diperbarui.');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required_if:anonim,false|numeric',
-            'nama' => 'required_if:anonim,false|string|max:255',
-            'semester' => 'required_if:anonim,false|integer|min:1',
+            'nama' => 'required|string|max:255',
+            'nim' => 'required|numeric',
+            'nama_terlapor' => 'required|string|max:255',
+            'nim_terlapor' => 'required|numeric',
+            'status_terlapor' => 'required|string|max:255',
             'jenis_masalah' => 'required|string|max:255',
-            'keterangan' => 'required|string',
-            'kontak_pengadu' => 'nullable|string|max:255',
-            'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'anonim' => 'nullable|boolean',
+            'jenis_pelanggaran' => 'required|string|max:255',
+            'keterangan_tambahan' => 'nullable|string',
+            'persetujuan' => 'required|accepted',
         ]);
 
-        $data = $request->all();
-
-        if ($request->hasFile('lampiran')) {
-            $path = $request->file('lampiran')->store('lampiran-pengaduan', 'public');
-            $data['lampiran'] = $path;
+        $data = $request->only(['nama', 'nim', 'nama_terlapor', 'nim_terlapor', 'status_terlapor', 'jenis_masalah']);
+        
+        $keterangan = $request->jenis_pelanggaran;
+        if ($request->jenis_pelanggaran === 'Lainnya' && $request->filled('keterangan_tambahan')) {
+            $keterangan .= ' - ' . $request->keterangan_tambahan;
         }
+        $data['keterangan'] = $keterangan;
 
         $data['kode_tiket'] = Str::random(10);
-
-        if ($request->has('anonim')) {
-            $data['nim'] = null;
-            $data['nama'] = null;
-            $data['semester'] = null;
-        }
+        $data['status'] = 'pending';
 
         Pengaduan::create($data);
 

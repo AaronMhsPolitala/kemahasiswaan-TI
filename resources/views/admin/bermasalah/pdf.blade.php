@@ -10,6 +10,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
         th, td {
             border: 1px solid black;
@@ -26,12 +27,23 @@
 <body>
     <h1>Laporan Mahasiswa Bermasalah</h1>
     <table>
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 15%;">
+            <col style="width: 10%;">
+            <col style="width: 15%;">
+            <col style="width: 10%;">
+            <col style="width: 30%;">
+            <col style="width: 10%;">
+        </colgroup>
         <thead>
             <tr>
-                <th>NIM</th>
-                <th>Nama</th>
+                <th>NIM Pelapor</th>
+                <th>Nama Pelapor</th>
+                <th>NIM Terlapor</th>
+                <th>Nama Terlapor</th>
                 <th>Jenis Masalah</th>
-                <th>Keterangan</th>
+                <th>Jenis Pelanggaran / Keterangan</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -40,6 +52,8 @@
                 <tr>
                     <td>{{ $pengaduan->nim ?? 'Anonim' }}</td>
                     <td>{{ $pengaduan->nama ?? 'Anonim' }}</td>
+                    <td>{{ $pengaduan->nim_terlapor ?? 'N/A' }}</td>
+                    <td>{{ $pengaduan->nama_terlapor ?? 'N/A' }}</td>
                     <td>{{ $pengaduan->jenis_masalah }}</td>
                     <td>{{ $pengaduan->keterangan }}</td>
                     <td>{{ $pengaduan->status }}</td>

@@ -38,6 +38,21 @@
     .modal-body { font-size: 1rem; }
     .modal-footer { margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem; }
     .info-grid { display: grid; grid-template-columns: 150px auto; gap: 0.5rem; }
+    .badge {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: .75em;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.375rem;
+    }
+    .badge-danger { background-color: var(--danger-color); }
+    .badge-success { background-color: var(--success-color); }
+    .badge-warning { background-color: #f59e0b; }
 </style>
 @endpush
 
@@ -58,14 +73,13 @@
 
     <div class="filter-bar">
         <form action="{{ route('admin.mahasiswa-bermasalah.index') }}" method="GET" class="d-flex gap-3">
-            <input type="text" name="search" placeholder="Cari NIM, Nama..." value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="Cari NIM/Nama Pelapor & Terlapor..." value="{{ request('search') }}">
             <select name="jenis_masalah">
                 <option value="">Semua Jenis Masalah</option>
                 <option value="Akademik" {{ request('jenis_masalah') == 'Akademik' ? 'selected' : '' }}>Akademik</option>
-                <option value="Keuangan" {{ request('jenis_masalah') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
                 <option value="Disiplin" {{ request('jenis_masalah') == 'Disiplin' ? 'selected' : '' }}>Disiplin</option>
-                <option value="Administrasi" {{ request('jenis_masalah') == 'Administrasi' ? 'selected' : '' }}>Administrasi</option>
-                <option value="Lainnya" {{ request('jenis_masalah') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                <option value="Etika & Perilaku" {{ request('jenis_masalah') == 'Etika & Perilaku' ? 'selected' : '' }}>Etika & Perilaku</option>
+                <option value="Tata Tertib Kampus" {{ request('jenis_masalah') == 'Tata Tertib Kampus' ? 'selected' : '' }}>Tata Tertib Kampus</option>
             </select>
             <select name="status">
                 <option value="">Semua Status</option>
@@ -81,10 +95,12 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>NIM</th>
-                    <th>Nama</th>
+                    <th>NIM Pelapor</th>
+                    <th>Nama Pelapor</th>
+                    <th>NIM Terlapor</th>
+                    <th>Nama Terlapor</th>
                     <th>Jenis Masalah</th>
-                    <th>Deskripsi</th>
+                    <th>Jenis Pelanggaran / Keterangan</th>
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -94,19 +110,31 @@
                     <tr>
                         <td>{{ $pengaduan->nim ?? 'Anonim' }}</td>
                         <td>{{ $pengaduan->nama ?? 'Anonim' }}</td>
+                        <td>{{ $pengaduan->nim_terlapor ?? 'N/A' }}</td>
+                        <td>{{ $pengaduan->nama_terlapor ?? 'N/A' }}</td>
                         <td>{{ $pengaduan->jenis_masalah }}</td>
                         <td>{{ Str::limit($pengaduan->keterangan, 50) }}</td>
-                        <td>{{ $pengaduan->status }}</td>
+                        <td>
+    @if($pengaduan->status == 'selesai')
+        <span class="badge badge-danger">Dinyatakan Bermasalah</span>
+    @elseif($pengaduan->status == 'ditanggapi')
+        <span class="badge badge-success">Dinyatakan Tidak Bermasalah</span>
+    @else
+        <span class="badge badge-warning">{{ ucfirst($pengaduan->status) }}</span>
+    @endif
+</td>
                         <td class="action-btns">
-                            <button type="button" class="btn btn-primary view-btn" data-pengaduan='{{ json_encode($pengaduan) }}'><i class="fas fa-eye"></i></button>
-                            <a href="{{ route('admin.mahasiswa-bermasalah.edit', $pengaduan->id) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
-                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $pengaduan->id }}"><i class="fas fa-trash"></i></button>
+                            <button type="button" class="btn btn-primary view-btn" data-id="{{ $pengaduan->id }}" data-pengaduan='{{ json_encode($pengaduan) }}'>
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $pengaduan->id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
                             <form id="delete-form-{{ $pengaduan->id }}" action="{{ route('admin.mahasiswa-bermasalah.destroy', $pengaduan->id) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
                             </form>
-                        </td>
-                    </tr>
+                        </td>                    </tr>
                 @empty
                     <tr>
                         <td colspan="6" class="text-center py-5">Tidak ada data pengaduan.</td>
@@ -131,16 +159,26 @@
             </div>
             <div class="modal-body">
                 <div class="info-grid">
-                    <strong>NIM:</strong> <span id="view_nim"></span>
-                    <strong>Nama:</strong> <span id="view_nama"></span>
-                    <strong>Semester:</strong> <span id="view_semester"></span>
+                    <strong>NIM Pelapor:</strong> <span id="view_nim"></span>
+                    <strong>Nama Pelapor:</strong> <span id="view_nama"></span>
+                    <strong>NIM Terlapor:</strong> <span id="view_nim_terlapor"></span>
+                    <strong>Nama Terlapor:</strong> <span id="view_nama_terlapor"></span>
+                    <strong>Status Terlapor:</strong> <span id="view_status_terlapor"></span>
                     <strong>Jenis Masalah:</strong> <span id="view_jenis_masalah"></span>
-                    <strong>Keterangan:</strong> <span id="view_keterangan"></span>
-                    <strong>Kontak:</strong> <span id="view_kontak_pengadu"></span>
-                    <strong>Lampiran:</strong> <span id="view_lampiran"></span>
+                    <strong>Jenis Pelanggaran / Keterangan:</strong> <span id="view_keterangan"></span>
                     <strong>Status:</strong> <span id="view_status"></span>
                 </div>
             </div>
+            <div class="modal-footer">
+                <form id="updateStatusForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="status" id="new_status">
+                    <button type="submit" class="btn btn-danger" onclick="document.getElementById('new_status').value = 'selesai';">Dinyatakan Bermasalah</button>
+                    <button type="submit" class="btn btn-success" onclick="document.getElementById('new_status').value = 'ditanggapi';">Dinyatakan Tidak Bermasalah</button>
+                    
+                </form>
+            </div>            
         </div>
     </div>
 
@@ -160,81 +198,73 @@
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const viewModal = document.getElementById('viewModal');
-    const deleteModal = document.getElementById('deleteModal');
-    const confirmDelete = document.getElementById('confirmDelete');
-    const cancelDelete = document.getElementById('cancelDelete');
-    let formToSubmit;
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewModal = document.getElementById('viewModal');
+        const deleteModal = document.getElementById('deleteModal');
+        const confirmDelete = document.getElementById('confirmDelete');
+        const cancelDelete = document.getElementById('cancelDelete');
+        const updateStatusForm = document.getElementById('updateStatusForm');
+        let formToSubmit;
+        let pengaduanId;
 
-    document.querySelectorAll('.view-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const pengaduan = JSON.parse(this.dataset.pengaduan);
-            document.getElementById('view_nim').textContent = pengaduan.nim ?? 'Anonim';
-            document.getElementById('view_nama').textContent = pengaduan.nama ?? 'Anonim';
-            document.getElementById('view_semester').textContent = pengaduan.semester ?? 'N/A';
-            document.getElementById('view_jenis_masalah').textContent = pengaduan.jenis_masalah;
-            document.getElementById('view_keterangan').textContent = pengaduan.keterangan;
-            document.getElementById('view_kontak_pengadu').textContent = pengaduan.kontak_pengadu ?? 'N/A';
-            document.getElementById('view_lampiran').innerHTML = pengaduan.lampiran ? `<a href="/storage/${pengaduan.lampiran}" target="_blank">Lihat Lampiran</a>` : 'Tidak ada';
-            document.getElementById('view_status').textContent = pengaduan.status;
-            viewModal.style.display = 'block';
+        document.querySelectorAll('.view-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                pengaduanId = this.dataset.id;
+                const pengaduan = JSON.parse(this.dataset.pengaduan);
+                document.getElementById('view_nim').textContent = pengaduan.nim ?? 'Anonim';
+                document.getElementById('view_nama').textContent = pengaduan.nama ?? 'Anonim';
+                document.getElementById('view_nim_terlapor').textContent = pengaduan.nim_terlapor ?? 'N/A';
+                document.getElementById('view_nama_terlapor').textContent = pengaduan.nama_terlapor ?? 'N/A';
+                document.getElementById('view_status_terlapor').textContent = pengaduan.status_terlapor ?? 'N/A';
+                document.getElementById('view_jenis_masalah').textContent = pengaduan.jenis_masalah;
+                document.getElementById('view_keterangan').textContent = pengaduan.keterangan;
+                document.getElementById('view_status').textContent = pengaduan.status;
+
+                let updateUrl = "{{ route('admin.mahasiswa-bermasalah.update', ':id') }}";
+                updateUrl = updateUrl.replace(':id', pengaduanId);
+                updateStatusForm.action = updateUrl;
+
+                viewModal.style.display = 'block';
+            });
         });
-    });
 
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const pengaduanId = this.dataset.id;
-            formToSubmit = document.getElementById(`delete-form-${pengaduanId}`);
-            deleteModal.style.display = 'block';
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const pengaduanId = this.dataset.id;
+                formToSubmit = document.getElementById(`delete-form-${pengaduanId}`);
+                deleteModal.style.display = 'block';
+            });
         });
-    });
 
-    cancelDelete.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-
-    confirmDelete.addEventListener('click', () => {
-        if (formToSubmit) {
-            formToSubmit.submit();
-        }
-    });
-
-    document.querySelectorAll('.modal-close').forEach(button => {
-        button.addEventListener('click', () => {
-            viewModal.style.display = 'none';
-        });
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target == viewModal) {
-            viewModal.style.display = 'none';
-        }
-        if (event.target == deleteModal) {
+        cancelDelete.addEventListener('click', () => {
             deleteModal.style.display = 'none';
-        }
-    });
+        });
 
-    const importModal = document.getElementById('importModal');
-    document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            const target = this.dataset.target;
-            document.querySelector(target).style.display = 'block';
+        confirmDelete.addEventListener('click', () => {
+            if (formToSubmit) {
+                formToSubmit.submit();
+            }
+        });
+
+        document.querySelectorAll('.modal-close').forEach(button => {
+            button.addEventListener('click', () => {
+                viewModal.style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == viewModal) {
+                viewModal.style.display = 'none';
+            }
+            if (event.target == deleteModal) {
+                deleteModal.style.display = 'none';
+            }
+        });
+
+        // Close modal with the "Tutup" button
+        document.querySelector('.modal-footer .btn[data-dismiss="modal"]').addEventListener('click', () => {
+            viewModal.style.display = 'none';
         });
     });
-
-    document.querySelectorAll('.btn-close').forEach(button => {
-        button.addEventListener('click', function () {
-            this.closest('.modal').style.display = 'none';
-        });
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
-        }
-    });
-});
 </script>
 @endpush

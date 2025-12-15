@@ -20,5 +20,8 @@ class Pengaduan extends Model
         'anonim',
         'kode_tiket',
         'status',
+        'nama_terlapor',
+        'nim_terlapor',
+        'status_terlapor',
     ];
 }

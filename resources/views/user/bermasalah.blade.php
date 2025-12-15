@@ -159,10 +159,10 @@
 
             <div class="row g-3">
 
-                <!-- 1. Nama -->
+                <!-- 1. Nama Pelapor -->
                 <div class="col-md-6">
                     <label class="form-label" for="nama">
-                        <i class="fa-solid fa-user"></i> Nama Lengkap
+                        <i class="fa-solid fa-user"></i> Nama Pelapor
                     </label>
                     <input type="text" id="nama" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Masukkan nama lengkap Anda" value="{{ old('nama') }}" required>
                     @error('nama')
@@ -170,97 +170,92 @@
                     @enderror
                 </div>
 
-                <!-- 2. NIM -->
+                <!-- 2. NIM Pelapor -->
                 <div class="col-md-6">
                     <label class="form-label" for="nim">
-                        <i class="fa-solid fa-id-card-clip"></i> NIM
+                        <i class="fa-solid fa-id-card-clip"></i> NIM Pelapor
                     </label>
-                    <input type="text" id="nim" name="nim" class="form-control @error('nim') is-invalid @enderror" placeholder="Masukkan NIM Anda" value="{{ old('nim') }}" required>
+                    <input type="number" id="nim" name="nim" class="form-control @error('nim') is-invalid @enderror" placeholder="Masukkan NIM Pelapor Anda" value="{{ old('nim') }}" required>
                     @error('nim')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- 3. Semester -->
+                <!-- Divider for Pihak yang Dilaporkan -->
+                <div class="col-12">
+                    <hr class="my-3">
+                    <h5 class="subtitle" style="font-size: 1.1rem; color: var(--text-main); font-weight: 600;">Pihak yang Dilaporkan</h5>
+                </div>
+
+                <!-- Nama Terlapor -->
                 <div class="col-md-6">
-                    <label class="form-label" for="semester">
-                        <i class="fa-solid fa-graduation-cap"></i> Semester
+                    <label class="form-label" for="nama_terlapor">
+                        <i class="fa-solid fa-user-shield"></i> Nama Terlapor
                     </label>
-                    <input type="number" id="semester" name="semester" class="form-control @error('semester') is-invalid @enderror" placeholder="Contoh: 5" min="1" value="{{ old('semester') }}" required>
-                    @error('semester')
+                    <input type="text" id="nama_terlapor" name="nama_terlapor" class="form-control @error('nama_terlapor') is-invalid @enderror" placeholder="Nama Mahasiswa yang dilaporkan" value="{{ old('nama_terlapor') }}" required>
+                    @error('nama_terlapor')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- 4. Jenis Masalah -->
+                <!-- NIM Terlapor -->
+                <div class="col-md-6">
+                    <label class="form-label" for="nim_terlapor">
+                        <i class="fa-solid fa-id-card-clip"></i> NIM Terlapor
+                    </label>
+                    <input type="number" id="nim_terlapor" name="nim_terlapor" class="form-control @error('nim_terlapor') is-invalid @enderror" placeholder="Masukkan NIM Mahasiswa yang dilaporkan" value="{{ old('nim_terlapor') }}" required>
+                    @error('nim_terlapor')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <!-- Hidden Status Terlapor -->
+                <input type="hidden" name="status_terlapor" value="Mahasiswa">
+
+                <!-- 3. Jenis Masalah -->
                 <div class="col-md-6">
                     <label class="form-label" for="jenis_masalah">
                         <i class="fa-solid fa-triangle-exclamation"></i> Jenis Masalah
                     </label>
                     <select id="jenis_masalah" name="jenis_masalah" class="form-select @error('jenis_masalah') is-invalid @enderror" required>
                         <option value="">-- Pilih Jenis Masalah --</option>
-                        <option value="Akademik" {{ old('jenis_masalah') == 'Akademik' ? 'selected' : '' }}>Akademik</option>
-                        <option value="Keuangan" {{ old('jenis_masalah') == 'Keuangan' ? 'selected' : '' }}>Keuangan</option>
-                        <option value="Disiplin" {{ old('jenis_masalah') == 'Disiplin' ? 'selected' : '' }}>Disiplin</option>
-                        <option value="Administrasi" {{ old('jenis_masalah') == 'Administrasi' ? 'selected' : '' }}>Administrasi</option>
-                        <option value="Lainnya" {{ old('jenis_masalah') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                        <option value="Akademik">Akademik</option>
+                        <option value="Disiplin">Disiplin</option>
+                        <option value="Etika & Perilaku">Etika & Perilaku</option>
+                        <option value="Tata Tertib Kampus">Tata Tertib Kampus</option>
                     </select>
                     @error('jenis_masalah')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- 5. Keterangan -->
-                <div class="col-12">
-                    <label class="form-label" for="keterangan">
-                        <i class="fa-solid fa-file-pen"></i> Keterangan Masalah
+                <!-- 4. Jenis Pelanggaran -->
+                <div class="col-md-6">
+                    <label class="form-label" for="jenis_pelanggaran">
+                        <i class="fa-solid fa-shield-halved"></i> Jenis Pelanggaran
                     </label>
-                    <textarea id="keterangan" name="keterangan" class="form-control @error('keterangan') is-invalid @enderror" rows="5"
-                        placeholder="Jelaskan secara rinci masalah yang ingin Anda laporkan"
-                        required>{{ old('keterangan') }}</textarea>
-                    @error('keterangan')
+                    <select id="jenis_pelanggaran" name="jenis_pelanggaran" class="form-select @error('jenis_pelanggaran') is-invalid @enderror" required disabled>
+                        <option value="">-- Pilih Jenis Pelanggaran --</option>
+                    </select>
+                    @error('jenis_pelanggaran')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <!-- 6. Kontak -->
-                <div class="col-12">
-                    <label class="form-label" for="kontak_pengadu">
-                        <i class="fa-solid fa-at"></i> Kontak (Email / No HP)
+                <!-- 5. Keterangan Tambahan -->
+                <div class="col-12" id="keterangan-tambahan-wrapper" style="display: none;">
+                    <label class="form-label" for="keterangan_tambahan">
+                        <i class="fa-solid fa-file-pen"></i> Keterangan Tambahan
                     </label>
-                    <input type="text" id="kontak_pengadu" name="kontak_pengadu" class="form-control @error('kontak_pengadu') is-invalid @enderror" placeholder="Opsional - untuk dihubungi admin" value="{{ old('kontak_pengadu') }}">
-                    @error('kontak_pengadu')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <textarea id="keterangan_tambahan" name="keterangan_tambahan" class="form-control" rows="4" placeholder="Jelaskan secara rinci."></textarea>
                 </div>
 
-                <!-- 7. Lampiran -->
-                <div class="col-12">
-                    <label class="form-label" for="lampiran">
-                        <i class="fa-solid fa-paperclip"></i> Lampiran Bukti (opsional)
-                    </label>
-                    <input type="file" id="lampiran" name="lampiran" class="form-control @error('lampiran') is-invalid @enderror">
-                    @error('lampiran')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <!-- 8. Anonim -->
-                <div class="col-12">
+                <!-- Checkbox Persetujuan -->
+                <div class="col-12 mt-4">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="anonim" name="anonim" value="1" {{ old('anonim') ? 'checked' : '' }}>
-                        <label class="form-check-label" for="anonim">
-                            <i class="fa-solid fa-user-ninja"></i> Kirim sebagai anonim
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 9. Persetujuan -->
-                <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="persetujuan" name="persetujuan" value="1" {{ old('persetujuan') ? 'checked' : '' }} required>
+                        <input class="form-check-input @error('persetujuan') is-invalid @enderror" type="checkbox" id="persetujuan" name="persetujuan" value="1" required>
                         <label class="form-check-label" for="persetujuan">
-                            <i class="fa-solid fa-circle-check"></i> Saya menyetujui bahwa data yang saya kirim adalah benar.
+                            <i class="fa-solid fa-circle-check"></i> Saya menyatakan bahwa data yang saya kirim adalah benar dan dapat dipertanggung jawabkan
                         </label>
                         @error('persetujuan')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -269,6 +264,68 @@
                 </div>
 
             </div>
+
+            @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const jenisMasalah = document.getElementById('jenis_masalah');
+                    const jenisPelanggaran = document.getElementById('jenis_pelanggaran');
+                    const keteranganTambahanWrapper = document.getElementById('keterangan-tambahan-wrapper');
+
+                    const pelanggaranOptions = {
+                        'Akademik': [
+                            'Mencontek saat ujian',
+                            'Plagiarisme tugas / skripsi',
+                            'Pemalsuan data akademik',
+                            'Titip absen',
+                            'Lainnya'
+                        ],
+                        'Disiplin': [
+                            'Terlambat masuk kelas',
+                            'Tidak mengikuti kegiatan wajib',
+                            'Merokok di area terlarang',
+                            'Lainnya'
+                        ],
+                        'Etika & Perilaku': [
+                            'Berkata tidak sopan',
+                            'Mengganggu ketertiban umum',
+                            'Cyberbullying',
+                            'Lainnya'
+                        ],
+                        'Tata Tertib Kampus': [
+                            'Tidak memakai almamater pada hari yang ditentukan',
+                            'Parkir sembarangan',
+                            'Merusak fasilitas kampus',
+                            'Lainnya'
+                        ]
+                    };
+
+                    jenisMasalah.addEventListener('change', function () {
+                        const selectedMasalah = this.value;
+                        jenisPelanggaran.innerHTML = '<option value="">-- Pilih Jenis Pelanggaran --</option>';
+                        jenisPelanggaran.disabled = true;
+                        keteranganTambahanWrapper.style.display = 'none';
+
+                        if (selectedMasalah && pelanggaranOptions[selectedMasalah]) {
+                            pelanggaranOptions[selectedMasalah].forEach(function (option) {
+                                const newOption = new Option(option, option);
+                                jenisPelanggaran.add(newOption);
+                            });
+                            jenisPelanggaran.disabled = false;
+                        }
+                    });
+
+                    jenisPelanggaran.addEventListener('change', function () {
+                        if (this.value === 'Lainnya') {
+                            keteranganTambahanWrapper.style.display = 'block';
+                        } else {
+                            keteranganTambahanWrapper.style.display = 'none';
+                        }
+                    });
+                });
+            </script>
+            @endpush
+
 
             <div class="text-center mt-4">
                 <button type="submit" class="btn-submit">
