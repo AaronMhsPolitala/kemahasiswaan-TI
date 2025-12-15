@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Divisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DivisiController extends Controller
 {
@@ -24,9 +25,11 @@ class DivisiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_divisi' => 'required|string|max:255',
+            'nama_divisi' => 'required|string|max:255|unique:divisis,nama_divisi',
             'deskripsi' => 'required|string',
             'photo_divisi' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'nama_divisi.unique' => 'Nama divisi ini sudah ada. Mohon gunakan nama lain.',
         ]);
 
         $data = [
@@ -56,9 +59,11 @@ class DivisiController extends Controller
     public function update(Request $request, Divisi $divisi)
     {
         $request->validate([
-            'nama_divisi' => 'required|string|max:255',
+            'nama_divisi' => ['required', 'string', 'max:255', Rule::unique('divisis')->ignore($divisi->id)],
             'deskripsi' => 'required|string',
             'photo_divisi' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'nama_divisi.unique' => 'Nama divisi ini sudah ada. Mohon gunakan nama lain.',
         ]);
 
         $data = [
@@ -88,3 +93,4 @@ class DivisiController extends Controller
         return redirect()->route('admin.divisi.index')->with('success', 'Divisi berhasil dihapus.');
     }
 }
+

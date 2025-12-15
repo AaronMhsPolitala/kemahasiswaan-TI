@@ -39,7 +39,7 @@
       @forelse ($users as $user)
         <tr>
           <td class="user-photo">
-            <img src="{{ $user->photo_url ?? 'https://i.pravatar.cc/40' }}" alt="User">
+            <img src="{{ $user->photo_url }}" alt="User">
           </td>
           <td>{{ $user->name }}</td>
           <td>{{ $user->email }}</td>

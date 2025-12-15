@@ -1,6 +1,6 @@
 <aside class="sidebar">
    <div class="sidebar-header">
-    <img src="{{ $logo ? asset($logo->value) : asset('assets/image/logo_hima.png') }}" alt="Logo HMTI" class="logo">
+    <img src="{{ $logoUrl }}" alt="Logo HMTI" class="logo">
     <i class="fas fa-bars menu-icon"></i>
 </div>
 

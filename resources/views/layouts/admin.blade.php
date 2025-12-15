@@ -80,7 +80,7 @@
       <div class="profile-dropdown-wrapper">
         <div class="profile-dropdown-toggle">
             <span>Hi, {{ Auth::user()->name ?? 'Admin' }}</span>
-            <img src="{{ Auth::user()->photo_url ?? 'https://i.pravatar.cc/150?u=' . Auth::id() }}" alt="User Avatar">
+            <img src="{{ Auth::user() ? Auth::user()->photo_url : asset('assets/image/profil.png') }}" alt="User Avatar">
         </div>
         <div class="profile-dropdown-menu">
             <a class="profile-dropdown-item" href="{{ route('user.beranda') }}">Beranda User</a>

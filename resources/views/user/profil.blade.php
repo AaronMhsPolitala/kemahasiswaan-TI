@@ -1,178 +1,299 @@
+@php
+    use App\Models\Setting;
+    use Illuminate\Support\Facades\Storage;
+
+    $settings = Setting::all()->keyBy('key');
+
+    // Default values if settings are not found
+    $siteName = $settings['site_name']->value ?? 'HIMPUNAN MAHASISWA TEKNOLOGI INFORMASI D3';
+    $tagline = $settings['deskripsi']->value ?? 'Wadah penggerak inovasi, kreativitas, dan solidaritas mahasiswa TI yang futuristik.';
+    $logoUrl = ($settings['logo']->value ?? null) ? Storage::url($settings['logo']->value) : asset('assets/image/logo_hima.png');
+    $visi = $settings['visi']->value ?? 'Menjadikan HIMA-TI sebagai wadah yang aktif, inovatif, dan berkarakter dalam pengembangan potensi mahasiswa Teknologi Informasi.';
+    $misi = $settings['misi']->value ?? 'Meningkatkan solidaritas dan profesionalisme antaranggota.||Mengembangkan kemampuan teknis dan non-teknis mahasiswa TI.||Menjalin hubungan sinergis dengan berbagai pihak internal dan eksternal.||Mengadakan kegiatan yang mendukung perkembangan ilmu pengetahuan dan teknologi.';
+    
+    // Data Pengurus
+    $namaKetua = $settings['nama_ketua']->value ?? 'Rizky Ramadhan';
+    $fotoKetua = ($settings['foto_ketua']->value ?? null) ? Storage::url($settings['foto_ketua']->value) : asset('assets/image/profil.png');
+    $namaWakil = $settings['nama_wakil']->value ?? 'Siti Aisyah';
+    $fotoWakil = ($settings['foto_wakil']->value ?? null) ? Storage::url($settings['foto_wakil']->value) : asset('assets/image/profil.png');
+    $namaSekretaris = $settings['nama_sekretaris']->value ?? 'Ahmad Zaki';
+    $fotoSekretaris = ($settings['foto_sekretaris']->value ?? null) ? Storage::url($settings['foto_sekretaris']->value) : asset('assets/image/profil.png');
+    $namaBendahara = $settings['nama_bendahara']->value ?? 'Nurul Huda';
+    $fotoBendahara = ($settings['foto_bendahara']->value ?? null) ? Storage::url($settings['foto_bendahara']->value) : asset('assets/image/profil.png');
+@endphp
+
 @extends('layouts.user')
 
-@section('title', 'Profil HIMA TI')
+@section('title', $siteName)
 
 @push('styles')
-<style>
-    :root {
-        --primary-color: #2563eb;
-        --primary-dark: #1d4ed8;
-        --text-light: #f9fafb;
-        --text-dark: #1f2937;
-        --bg-light: #f3f4f6;
-        --card-bg: #ffffff;
-        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variabel */
+        :root {
+            --primary-color: #0d6efd; /* Biru Baru */
+            --primary-light: #408cfd; /* Varian lebih terang dari biru baru */
+            --primary-dark: #0558d4;  /* Biru lebih gelap */
+            --text-dark: #0f172a;
+            --text-secondary: #64748b;
+            --bg-page: #f0f8ff; /* Disesuaikan agar cocok dengan biru */
+            --card-bg: #ffffff;
+            --shadow-float: 0 10px 30px rgba(0, 0, 0, 0.04);
+            --shadow-hero: 0 25px 60px rgba(13, 110, 253, 0.4); /* Bayangan Hero disesuaikan */
+            --accent-bg: #e7f1ff; /* Aksen disesuaikan */
+            --font-family: 'Inter', sans-serif; 
+        }
 
+        /* Gaya Umum - pastikan tidak menimpa layout utama */
+        #main-content { /* Gunakan ID atau class dari layout utama jika ada */
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
     .profil-container {
-        padding: 2rem 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 5rem 2rem;
+        position: relative;
+        z-index: 1;
     }
 
-    .profil-container h1 {
+    /* Latar Belakang Geometris (Aero Effect) */
+    .profil-container::before {
+        content: '';
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        width: 300px;
+        height: 300px;
+        background: var(--primary-light);
+        filter: blur(100px);
+        opacity: 0.3;
+        border-radius: 50%;
+        z-index: -1;
+    }
+    .profil-container::after {
+        content: '';
+        position: absolute;
+        bottom: 10%;
+        right: 10%;
+        width: 400px;
+        height: 400px;
+        background: #fde047; /* Kuning Aksen */
+        filter: blur(120px);
+        opacity: 0.2;
+        border-radius: 50%;
+        z-index: -1;
+    }
+    
+    /* Header dan Logo */
+    .header-section {
         text-align: center;
+        margin-bottom: 6rem;
+    }
+
+    .header-section h1 {
         color: var(--text-dark);
-        font-weight: 700;
-        font-size: 2.25rem;
-        margin-bottom: 1.5rem;
+        font-weight: 900;
+        font-size: 3.5rem; /* Ukuran disesuaikan */
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+        margin-bottom: 0.5rem;
+    }
+    
+    .header-section .tagline {
+        font-size: 1.25rem; /* Ukuran disesuaikan */
+        color: var(--text-secondary);
+        font-weight: 500;
+        max-width: 700px;
+        margin: 0 auto;
     }
 
     .profil-container .logo {
         display: block;
         margin: 0 auto 2rem;
-        width: 180px; /* Increased logo size */
-        height: 180px; /* Increased logo size */
+        width: 200px; /* Diperbesar */
+        height: 200px; /* Diperbesar */
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid var(--card-bg); 
+        box-shadow: 0 0 0 10px var(--accent-bg); /* Ring Aksen Luar */
     }
 
+    /* Hero Section - Visi & Misi (Glass Effect) */
     .profil-container .hero {
-        width: min(1400px, 95%);
-        margin: 0 auto 3rem;
-        background: var(--primary-color);
-        color: var(--text-light);
-        border-radius: 1rem;
-        padding: 2.5rem;
-        text-align: center;
-        line-height: 1.7;
-        box-shadow: var(--shadow-lg);
+        width: min(100%, 1150px);
+        margin: 0 auto 6rem;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: var(--text-dark); 
+        border-radius: 2rem; 
+        padding: 4rem;
+        box-shadow: var(--shadow-hero);
+        position: relative;
+    }
+    
+    .hero-content {
+        z-index: 2;
+        position: relative;
     }
 
-    .profil-container .hero h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
+    .hero-content h3 {
+        font-size: 2rem;
+        font-weight: 800;
         margin-top: 2rem;
         margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        border-left: 5px solid var(--primary-color); 
+        color: var(--primary-color);
     }
-
-    .profil-container .hero ul {
+    
+    .hero-content > p:first-of-type {
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin-bottom: 3rem;
+    }
+    
+    /* Daftar Misi */
+    .mission-list {
         list-style: none;
         padding: 0;
-        margin: 0 auto;
-        display: table;
-        text-align: left;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 1.5rem;
+    }
+    
+    .mission-list li {
+        position: relative;
+        padding-left: 30px;
+        font-size: 1rem;
+        font-weight: 500;
     }
 
-    .profil-container .hero ul li::before {
-        content: "✓ ";
-        color: var(--text-light);
+    .mission-list li::before {
+        content: "💡"; 
+        position: absolute;
+        left: 0;
+        font-size: 1em;
     }
 
+    /* Grid Pengurus Inti */
+    .section-title {
+        text-align: center;
+        font-size: 2.25rem; /* Ukuran disesuaikan */
+        font-weight: 900;
+        margin-bottom: 4rem;
+        color: var(--text-dark);
+        letter-spacing: -0.04em;
+    }
+    
     .profil-container .grid {
         display: grid;
-        gap: 2rem;
-        grid-template-columns: repeat(4, 1fr);
-        width: min(1400px, 95%);
-        margin: 0 auto 4rem;
+        gap: 2.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 
-    @media(max-width: 1200px) {
-        .profil-container .grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media(max-width: 768px) {
-        .profil-container .grid {
-            grid-template-columns: 1fr;
-        }
-    }
-
+    /* Kartu Anggota */
     .profil-container .card {
         background: var(--card-bg);
-        color: var(--text-dark);
-        border-radius: 1rem;
-        padding: 2rem;
+        border-radius: 1.5rem; 
+        padding: 2rem 1.5rem;
         text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid #e5e7eb;
+        transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s;
+        box-shadow: var(--shadow-float);
+        border: 1px solid #f1f5f9;
     }
 
     .profil-container .card:hover {
-        transform: translateY(-10px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2); /* Bayangan hover disesuaikan */
     }
 
-    .profil-container .icon {
-        display: block;
-        margin: 0 auto 1rem;
-        width: 64px;
-        height: 64px;
-        fill: var(--primary-color);
+    .pengurus-foto {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1.5rem;
+        border: 4px solid var(--accent-bg);
     }
 
     .profil-container .card .name {
-        font-weight: 700;
-        font-size: 1.125rem;
+        font-weight: 900;
+        font-size: 1.2rem; /* Ukuran disesuaikan */
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
     }
 
     .profil-container .card .role {
-        color: #6b7280;
+        color: var(--primary-color); /* Warna utama */
+        font-weight: 700;
+        font-size: 1.05rem;
     }
-
+    
+    /* Media Query Responsif */
+    @media(max-width: 768px) {
+        .profil-container { padding: 3rem 1rem; }
+        .header-section h1 { font-size: 3rem; }
+        .profil-container .hero { padding: 2.5rem; }
+        .mission-list { grid-template-columns: 1fr; }
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="profil-container">
-  <h1>{!! $settings['site_name']->value ?? 'HIMPUNAN MAHASISWA<br>TEKNOLOGI INFORMASI D3' !!}</h1>
 
-  <img class="logo" src="{{ isset($settings['logo']) ? asset($settings['logo']->value) : asset('assets/image/logo_hima.png') }}" alt="Logo HIMA-TI">
-
-  <div class="hero">
-    <p>
-      {!! $settings['deskripsi']->value ?? 'Himpunan Mahasiswa Teknologi Informasi (HIMA-TI) Politeknik Negeri Tanah Laut merupakan organisasi kemahasiswaan 
-      yang berperan sebagai wadah pengembangan potensi, kreativitas, dan solidaritas mahasiswa di lingkungan Program Studi Teknologi Informasi.' !!}
-    </p>
-
-    <h3>Visi</h3>
-    <p>{{ $settings['visi']->value ?? 'Menjadikan HIMA-TI sebagai wadah yang aktif, inovatif, dan berkarakter dalam pengembangan potensi mahasiswa Teknologi Informasi.' }}</p>
-
-    <h3>Misi</h3>
-    <div style="display: inline-block; text-align: left;">{!! nl2br(e($settings['misi']->value ?? 'Meningkatkan solidaritas dan profesionalisme antaranggota.')) !!}</div>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path d="M12 12c2.7 0 8 1.34 8 4v4H4v-4c0-2.66 5.3-4 8-4Zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
-      </svg>
-      <div class="name">{{ $settings['nama_ketua']->value ?? 'Nama Ketua' }}</div>
-      <div class="role">Ketua Umum</div>
+    <div class="header-section">
+        <img class="logo" src="{{ $logoUrl }}" alt="Logo HIMA-TI">
+        <h1>{{ $siteName }}</h1>
     </div>
 
-    <div class="card">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2C5.7 13 1 14.2 1 16.5V19h8v-2c0-.68.28-1.3.72-1.72C9.92 14.44 8.95 13 8 13Zm8 0c-.95 0-1.92 1.44-2.72 2.28.44.42.72 1.04.72 1.72V19h8v-2.5c0-2.33-4.67-3.5-7-3.5Z"/>
-      </svg>
-      <div class="name">{{ $settings['nama_wakil']->value ?? 'Nama Wakil' }}</div>
-      <div class="role">Wakil Ketua</div>
+    <div class="hero">
+        <div class="hero-content">
+            <p>
+                {!! $tagline !!}
+            </p>
+
+            <h3>Visi</h3>
+            <p>{{ $visi }}</p>
+
+            <h3>Misi</h3>
+            <ul class="mission-list">
+                @foreach (explode('||', $misi) as $item)
+                    <li>{{ trim($item) }}</li>
+                @endforeach
+            </ul>
+        </div>
     </div>
 
-    <div class="card">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path d="M4 4h16v2H4zm0 4h10v2H4zm0 4h16v2H4zm0 4h10v2H4z"/>
-      </svg>
-      <div class="name">{{ $settings['nama_sekretaris']->value ?? 'Nama Sekretaris' }}</div>
-      <div class="role">Sekretaris Umum</div>
-    </div>
+    <h2 class="section-title">Struktur Kepengurusan Inti</h2>
+    <div class="grid">
+        <div class="card">
+            <img class="pengurus-foto" src="{{ $fotoKetua }}" alt="Foto {{ $namaKetua }}">
+            <div class="name">{{ $namaKetua }}</div>
+            <div class="role">Ketua Umum</div>
+        </div>
 
-    <div class="card">
-      <svg class="icon" viewBox="0 0 24 24">
-        <path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-      </svg>
-      <div class="name">{{ $settings['nama_bendahara']->value ?? 'Nama Bendahara' }}</div>
-      <div class="role">Bendahara Umum</div>
+        <div class="card">
+            <img class="pengurus-foto" src="{{ $fotoWakil }}" alt="Foto {{ $namaWakil }}">
+            <div class="name">{{ $namaWakil }}</div>
+            <div class="role">Wakil Ketua</div>
+        </div>
+
+        <div class="card">
+            <img class="pengurus-foto" src="{{ $fotoSekretaris }}" alt="Foto {{ $namaSekretaris }}">
+            <div class="name">{{ $namaSekretaris }}</div>
+            <div class="role">Sekretaris Umum</div>
+        </div>
+
+        <div class="card">
+            <img class="pengurus-foto" src="{{ $fotoBendahara }}" alt="Foto {{ $namaBendahara }}">
+            <div class="name">{{ $namaBendahara }}</div>
+            <div class="role">Bendahara Umum</div>
+        </div>
     </div>
-  </div>
 </div>
 @endsection

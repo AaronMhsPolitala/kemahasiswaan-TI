@@ -225,23 +225,47 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="nama_ketua">Nama Ketua</label>
-                <input class="form-input" id="nama_ketua" name="nama_ketua" type="text" value="{{ $settings['nama_ketua']->value ?? '' }}">
+                <label class="form-label" for="nama_ketua">Ketua Umum</label>
+                <div class="logo-upload">
+                    <img id="fotoKetuaPreview" class="logo-preview" alt="Foto Ketua" src="{{ isset($settings['foto_ketua']) && $settings['foto_ketua']->value ? Storage::url($settings['foto_ketua']->value) : 'https://via.placeholder.com/80x80.png?text=Foto' }}">
+                    <div style="width: 100%;">
+                        <input class="form-input" id="nama_ketua" name="nama_ketua" type="text" value="{{ $settings['nama_ketua']->value ?? '' }}" placeholder="Nama Ketua Umum">
+                        <input id="fotoKetuaInput" type="file" name="foto_ketua" accept="image/*" class="form-input" style="margin-top: 0.5rem;">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="nama_wakil">Nama Wakil</label>
-                <input class="form-input" id="nama_wakil" name="nama_wakil" type="text" value="{{ $settings['nama_wakil']->value ?? '' }}">
+                <label class="form-label" for="nama_wakil">Wakil Ketua</label>
+                <div class="logo-upload">
+                    <img id="fotoWakilPreview" class="logo-preview" alt="Foto Wakil" src="{{ isset($settings['foto_wakil']) && $settings['foto_wakil']->value ? Storage::url($settings['foto_wakil']->value) : 'https://via.placeholder.com/80x80.png?text=Foto' }}">
+                    <div style="width: 100%;">
+                        <input class="form-input" id="nama_wakil" name="nama_wakil" type="text" value="{{ $settings['nama_wakil']->value ?? '' }}" placeholder="Nama Wakil Ketua">
+                        <input id="fotoWakilInput" type="file" name="foto_wakil" accept="image/*" class="form-input" style="margin-top: 0.5rem;">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="nama_sekretaris">Nama Sekretaris</label>
-                <input class="form-input" id="nama_sekretaris" name="nama_sekretaris" type="text" value="{{ $settings['nama_sekretaris']->value ?? '' }}">
+                <label class="form-label" for="nama_sekretaris">Sekretaris Umum</label>
+                <div class="logo-upload">
+                    <img id="fotoSekretarisPreview" class="logo-preview" alt="Foto Sekretaris" src="{{ isset($settings['foto_sekretaris']) && $settings['foto_sekretaris']->value ? Storage::url($settings['foto_sekretaris']->value) : 'https://via.placeholder.com/80x80.png?text=Foto' }}">
+                    <div style="width: 100%;">
+                        <input class="form-input" id="nama_sekretaris" name="nama_sekretaris" type="text" value="{{ $settings['nama_sekretaris']->value ?? '' }}" placeholder="Nama Sekretaris Umum">
+                        <input id="fotoSekretarisInput" type="file" name="foto_sekretaris" accept="image/*" class="form-input" style="margin-top: 0.5rem;">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="nama_bendahara">Nama Bendahara</label>
-                <input class="form-input" id="nama_bendahara" name="nama_bendahara" type="text" value="{{ $settings['nama_bendahara']->value ?? '' }}">
+                <label class="form-label" for="nama_bendahara">Bendahara Umum</label>
+                <div class="logo-upload">
+                    <img id="fotoBendaharaPreview" class="logo-preview" alt="Foto Bendahara" src="{{ isset($settings['foto_bendahara']) && $settings['foto_bendahara']->value ? Storage::url($settings['foto_bendahara']->value) : 'https://via.placeholder.com/80x80.png?text=Foto' }}">
+                    <div style="width: 100%;">
+                        <input class="form-input" id="nama_bendahara" name="nama_bendahara" type="text" value="{{ $settings['nama_bendahara']->value ?? '' }}" placeholder="Nama Bendahara Umum">
+                        <input id="fotoBendaharaInput" type="file" name="foto_bendahara" accept="image/*" class="form-input" style="margin-top: 0.5rem;">
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -268,20 +292,43 @@
 <script>
     CKEDITOR.replace('deskripsi');
 
+    // Helper function to set up image preview
+    function setupImagePreview(inputId, previewId) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+
+        if (input) {
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = e => {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+    // Logo preview
+    setupImagePreview('logoInput', 'logoPreview');
+
+    // Pengurus photo previews
+    setupImagePreview('fotoKetuaInput', 'fotoKetuaPreview');
+    setupImagePreview('fotoWakilInput', 'fotoWakilPreview');
+    setupImagePreview('fotoSekretarisInput', 'fotoSekretarisPreview');
+    setupImagePreview('fotoBendaharaInput', 'fotoBendaharaPreview');
+
     const logoInput = document.getElementById('logoInput');
-    const logoPreview = document.getElementById('logoPreview');
     const fileName = document.getElementById('fileName');
 
-    logoInput.addEventListener('change', () => {
-        const file = logoInput.files && logoInput.files[0];
-        if (!file) return;
-
-        fileName.textContent = file.name;
-        const reader = new FileReader();
-        reader.onload = e => {
-            logoPreview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
+    if (logoInput) {
+        logoInput.addEventListener('change', () => {
+            const file = logoInput.files && logoInput.files[0];
+            if (!file) return;
+            fileName.textContent = file.name;
+        });
+    }
 </script>
 @endpush
