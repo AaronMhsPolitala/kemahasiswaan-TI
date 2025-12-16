@@ -31,7 +31,11 @@ class UserPrestasiController extends Controller
             $query->where('tingkat_kegiatan', $request->tingkat_kegiatan);
         }
         if ($request->filled('prestasi_yang_dicapai')) {
-            $query->where('prestasi_yang_dicapai', $request->prestasi_yang_dicapai);
+            $prestasi_yang_dicapai = $request->prestasi_yang_dicapai;
+            if ($prestasi_yang_dicapai == 'Partisipan') {
+                $prestasi_yang_dicapai = 'Lainnya';
+            }
+            $query->where('prestasi_yang_dicapai', $prestasi_yang_dicapai);
         }
         if ($request->filled('keterangan')) {
             $query->where('keterangan', $request->keterangan);
@@ -52,6 +56,8 @@ class UserPrestasiController extends Controller
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => 'page',
         ]);
+
+        $prestasis->withQueryString();
 
         // Data for filters
         $tingkat_kegiatans = ['Internal (Kampus)', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional'];

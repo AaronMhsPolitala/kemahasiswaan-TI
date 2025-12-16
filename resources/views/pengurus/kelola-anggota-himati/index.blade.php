@@ -103,7 +103,7 @@
     </section>
 
     <div style="margin-top: 1.5rem;">
-        {{ $members->links() }}
+        {{ $members->links('vendor.pagination.simple-bootstrap-5') }}
     </div>
 </div>
 

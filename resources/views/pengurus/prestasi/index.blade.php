@@ -114,7 +114,7 @@
     </div>
 
     <div class="mt-4">
-        {{ $prestasis->links() }}
+        {{ $prestasis->links('vendor.pagination.simple-bootstrap-5') }}
     </div>
 
 

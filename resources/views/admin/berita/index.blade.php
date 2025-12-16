@@ -56,7 +56,7 @@
 </table>
 
 <div style="margin-top:12px;">
-    {{ $beritas->links() }}
+    {{ $beritas->links('vendor.pagination.simple-bootstrap-5') }}
 </div>
 </section>
 

@@ -57,7 +57,7 @@
         </table>
 
         <div style="margin-top:12px;">
-            {{ $aspirasis->links() }}
+            {{ $aspirasis->links('vendor.pagination.simple-bootstrap-5') }}
         </div>
     </section>
 
