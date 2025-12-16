@@ -23,8 +23,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
+            $logoSetting = Setting::where('key', 'logo')->first();
+            $logoUrl = ($logoSetting && $logoSetting->value) 
+                        ? \Illuminate\Support\Facades\Storage::url($logoSetting->value) 
+                        : asset('assets/image/logo_hima.png');
+
             $view->with('semua_divisi', Divisi::all());
-            $view->with('logo', Setting::where('key', 'logo')->first());
+            $view->with('logo', $logoSetting); // Kembalikan variabel $logo
+            $view->with('logoUrl', $logoUrl); // Tetap bagikan $logoUrl
         });
     }
 }

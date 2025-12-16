@@ -111,7 +111,7 @@
     <tbody>
       @forelse ($users as $user)
         <tr>
-          <td><img src="{{ $user->photo_url ?? 'https://i.pravatar.cc/40' }}" alt="Photo" style="width: 40px; height: 40px; border-radius: 50%;"></td>
+          <td><img src="{{ $user->photo_url }}" alt="Photo" style="width: 40px; height: 40px; border-radius: 50%;"></td>
           <td>{{ $user->name }}</td>
           <td>{{ $user->email }}</td>
           <td>{{ $user->no_wa ?? 'N/A' }}</td>
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch(`/admin/users/${userId}`)
                 .then(response => response.json())
                 .then(user => {
-                    document.getElementById('view_photo').src = user.photo_url || 'https://i.pravatar.cc/100';
+                    document.getElementById('view_photo').src = user.photo_url;
                     document.getElementById('view_name').textContent = user.name;
                     document.getElementById('view_email').textContent = user.email;
                     document.getElementById('view_no_wa').textContent = user.no_wa || 'N/A';

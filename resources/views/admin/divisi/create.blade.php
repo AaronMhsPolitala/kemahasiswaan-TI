@@ -11,14 +11,25 @@
         <div class="form-group">
             <label for="nama_divisi">Nama Divisi</label>
             <input type="text" id="nama_divisi" name="nama_divisi" class="form-control" required>
+            @error('nama_divisi')
+                <div style="padding:10px 12px;border-radius:8px;background:#fee2e2;color:#ef4444;margin-bottom:12px;">
+                    {{ $message }}
+                </div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="deskripsi">Deskripsi</label>
             <textarea id="deskripsi" name="deskripsi" class="form-control" rows="5" required></textarea>
+            @error('deskripsi')
+                <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
         <div class="form-group">
             <label for="photo_divisi">Photo Divisi <span style="color: red;">*</span></label>
             <input type="file" id="photo_divisi" name="photo_divisi" class="form-control" required>
+            @error('photo_divisi')
+                <div class="alert alert-danger mt-2">{{ $message }}</div>
+            @enderror
         </div>
         <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
     </form>

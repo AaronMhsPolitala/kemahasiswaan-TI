@@ -30,7 +30,7 @@ class SettingController extends Controller
 
     public function updateProfile(Request $request)
     {
-        // 1. Validasi (Semua opsional)
+        // 1. Validasi
         $rules = [
             'site_name' => 'nullable|string|max:255',
             'visi' => 'nullable|string',
@@ -41,11 +41,15 @@ class SettingController extends Controller
             'nama_sekretaris' => 'nullable|string|max:255',
             'nama_bendahara' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_ketua' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_wakil' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_sekretaris' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto_bendahara' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
 
         $request->validate($rules);
 
-        // 2. Simpan pengaturan teks satu per satu jika ada di request
+        // 2. Simpan pengaturan teks
         $textSettings = ['site_name', 'visi', 'misi', 'deskripsi', 'nama_ketua', 'nama_wakil', 'nama_sekretaris', 'nama_bendahara'];
         foreach ($textSettings as $key) {
             if ($request->filled($key)) {
@@ -56,22 +60,34 @@ class SettingController extends Controller
             }
         }
 
-        // 3. Handle upload logo
-        if ($request->hasFile('logo')) {
-            $currentLogo = Setting::where('key', 'logo')->first();
-            // Hapus logo lama jika ada
-            if ($currentLogo && $currentLogo->value) {
-                Storage::disk('public')->delete($currentLogo->value);
-            }
-            // Simpan logo baru
-            $path = $request->file('logo')->store('logos', 'public');
-            Setting::updateOrCreate(
-                ['key' => 'logo'],
-                ['value' => $path]
-            );
-        }
+        // 3. Handle upload foto
+        $this->handlePhotoUpload($request, 'logo', 'logos');
+        $this->handlePhotoUpload($request, 'foto_ketua', 'pengurus');
+        $this->handlePhotoUpload($request, 'foto_wakil', 'pengurus');
+        $this->handlePhotoUpload($request, 'foto_sekretaris', 'pengurus');
+        $this->handlePhotoUpload($request, 'foto_bendahara', 'pengurus');
 
         // 4. Kembalikan dengan pesan sukses
         return back()->with('success', 'Profil website berhasil diperbarui.');
+    }
+
+    /**
+     * Helper function to handle photo uploads.
+     */
+    private function handlePhotoUpload(Request $request, string $key, string $directory)
+    {
+        if ($request->hasFile($key)) {
+            $currentFile = Setting::where('key', $key)->first();
+            // Hapus file lama jika ada
+            if ($currentFile && $currentFile->value) {
+                Storage::disk('public')->delete($currentFile->value);
+            }
+            // Simpan file baru
+            $path = $request->file($key)->store($directory, 'public');
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $path]
+            );
+        }
     }
 }

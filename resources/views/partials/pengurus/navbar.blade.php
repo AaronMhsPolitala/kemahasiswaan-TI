@@ -2,6 +2,6 @@
 <header class="topbar">
   <div class="user-profile">
     <span>Hi, {{ Auth::user()->name ?? 'Pengurus' }}</span>
-    <img src="https://i.pravatar.cc/150?u={{ Auth::id() }}" alt="User">
+    <img src="{{ Auth::user() ? Auth::user()->photo_url : asset('assets/image/profil.png') }}" alt="User">
   </div>
 </header>

@@ -49,10 +49,15 @@ class User extends Authenticatable
 
     public function getPhotoUrlAttribute()
     {
-        if ($this->avatar) {
-            return asset('storage/'.$this->avatar);
+        // If there's a locally stored avatar (not null and not an external URL)
+        // We can assume local avatars will always be file names
+        // If there's a local upload process, it will usually be stored as a string without 'http' or 'https'
+        if ($this->avatar && !str_starts_with($this->avatar, 'http://') && !str_starts_with($this->avatar, 'https://')) {
+            return asset('storage/' . $this->avatar);
         }
 
-        return null;
+        // If there is no local avatar, or the existing avatar is from an external source (Google, etc.),
+        // then use the default image
+        return asset('assets/image/profil.png');
     }
 }

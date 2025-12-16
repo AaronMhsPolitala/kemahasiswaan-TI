@@ -1,116 +1,307 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Form Pengaduan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil HIMA TI - Aero Minimalis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variabel */
+        :root {
+            --primary-color: #06b6d4; /* Cyan/Teal Cerah */
+            --primary-light: #22d3ee;
+            --text-dark: #0f172a;
+            --text-secondary: #64748b;
+            --bg-page: #f0f9ff; /* Background Biru Sangat Pucat */
+            --card-bg: #ffffff;
+            --shadow-float: 0 10px 30px rgba(0, 0, 0, 0.04);
+            --shadow-hero: 0 25px 60px rgba(6, 182, 212, 0.5); /* Bayangan Hero Cyan */
+            --accent-bg: #e0f8ff; /* Aksen sangat terang */
+            --font-family: 'Inter', sans-serif; 
+        }
 
-<style>
-.form-group {
-    margin-bottom: 1rem;
-}
+        /* Gaya Umum */
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-page);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
 
-label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: .4rem;
-}
+        .profil-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
 
-select {
-    width: 100%;
-    padding: .75rem;
-    border-radius: .6rem;
-    border: 1px solid #d1d5db;
-}
+        /* Latar Belakang Geometris (Aero Effect) */
+        .profil-container::before {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 300px;
+            height: 300px;
+            background: var(--primary-light);
+            filter: blur(100px);
+            opacity: 0.3;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        .profil-container::after {
+            content: '';
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: #fde047; /* Kuning Aksen */
+            filter: blur(120px);
+            opacity: 0.2;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        /* Header dan Logo */
+        .header-section {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
 
-select:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(37,99,235,.25);
-}
-</style>
+        .header-section h1 {
+            color: var(--text-dark);
+            font-weight: 900;
+            font-size: 4.5rem; /* Lebih besar */
+            letter-spacing: -0.06em;
+            line-height: 1.0;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-section .tagline {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .profil-container .logo {
+            display: block;
+            margin: 0 auto 2rem;
+            width: 160px; /* Lebih besar */
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--card-bg); 
+            box-shadow: 0 0 0 10px var(--accent-bg); /* Ring Aksen Luar */
+        }
+
+        /* Hero Section - Visi & Misi (Glass Effect) */
+        .profil-container .hero {
+            width: min(100%, 1150px);
+            margin: 0 auto 6rem;
+            /* Latar belakang transparan dengan blur */
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            
+            color: var(--text-dark); 
+            border-radius: 2rem; 
+            padding: 4rem;
+            box-shadow: var(--shadow-hero);
+            position: relative;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-content h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+            border-left: 5px solid var(--primary-color); 
+            color: var(--primary-color);
+        }
+        
+        .hero-content > p:first-of-type {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 3rem;
+        }
+        
+        /* Daftar Misi */
+        .mission-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 1.5rem;
+        }
+        
+        .mission-list li {
+            position: relative;
+            padding-left: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .mission-list li::before {
+            content: "💡"; 
+            position: absolute;
+            left: 0;
+            font-size: 1em;
+        }
+
+        /* Grid Pengurus Inti */
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 4rem;
+            color: var(--text-dark);
+            letter-spacing: -0.04em;
+        }
+        
+        .profil-container .grid {
+            display: grid;
+            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        /* Kartu Anggota */
+        .profil-container .card {
+            background: var(--card-bg);
+            border-radius: 1.5rem; 
+            padding: 3rem 1.5rem;
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s;
+            box-shadow: var(--shadow-float);
+            border: 1px solid #f1f5f9;
+        }
+
+        .profil-container .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(6, 182, 212, 0.2); /* Bayangan hover Cyan */
+        }
+
+        /* Ikon di Kartu */
+        .icon-wrapper {
+            margin: 0 auto 1.5rem;
+            width: 90px; 
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 4px var(--accent-bg); /* Ring Aksen */
+        }
+
+        .profil-container .icon {
+            width: 50px;
+            height: 50px;
+            fill: #ffffff; /* Ikon putih di latar belakang berwarna */
+        }
+
+        .profil-container .card .name {
+            font-weight: 900;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .profil-container .card .role {
+            color: var(--primary-color); /* Warna utama */
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+        
+        /* Media Query Responsif */
+        @media(max-width: 768px) {
+            .profil-container { padding: 3rem 1rem; }
+            .header-section h1 { font-size: 3rem; }
+            .profil-container .hero { padding: 2.5rem; }
+            .mission-list { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
-<div style="max-width:500px;margin:2rem auto">
+<div class="profil-container">
 
-    <!-- JENIS MASALAH -->
-    <div class="form-group">
-        <label>⚠️ Jenis Masalah</label>
-        <select id="jenisMasalah">
-            <option value="">-- Pilih Jenis Masalah --</option>
-            <option value="akademik">Akademik</option>
-            <option value="disiplin">Disiplin</option>
-            <option value="etika">Etika & Perilaku</option>
-            <option value="tata_tertib">Tata Tertib Kampus</option>
-        </select>
+    <div class="header-section">
+        <img class="logo" src="https://via.placeholder.com/160x160/06b6d4/ffffff?text=HIMA+TI" alt="Logo HIMA-TI">
+        
+        <h1>HIMPUNAN MAHASISWA<br>TEKNOLOGI INFORMASI D3</h1>
+        <p class="tagline">Wadah penggerak inovasi, kreativitas, dan solidaritas mahasiswa TI yang futuristik.</p>
     </div>
 
-    <!-- JENIS PELANGGARAN -->
-    <div class="form-group">
-        <label>📋 Jenis Pelanggaran</label>
-        <select id="jenisPelanggaran" disabled>
-            <option>-- Pilih Jenis Masalah Terlebih Dahulu --</option>
-        </select>
+    <div class="hero">
+        <div class="hero-content">
+            <p>
+                Himpunan Mahasiswa Teknologi Informasi (HIMA-TI) Politeknik Negeri Tanah Laut merupakan organisasi kemahasiswaan 
+                yang berperan sebagai wadah pengembangan potensi, kreativitas, dan solidaritas mahasiswa di lingkungan Program Studi Teknologi Informasi.
+            </p>
+
+            <h3>Visi</h3>
+            <p>Menjadikan HIMA-TI sebagai wadah yang aktif, inovatif, dan berkarakter dalam pengembangan potensi mahasiswa Teknologi Informasi.</p>
+
+            <h3>Misi</h3>
+            <ul class="mission-list">
+                <li>Meningkatkan solidaritas dan profesionalisme antaranggota.</li>
+                <li>Mengembangkan kemampuan teknis dan non-teknis mahasiswa TI.</li>
+                <li>Menjalin hubungan sinergis dengan berbagai pihak internal dan eksternal.</li>
+                <li>Mengadakan kegiatan yang mendukung perkembangan ilmu pengetahuan dan teknologi.</li>
+            </ul>
+        </div>
     </div>
 
+    <h2 class="section-title">Struktur Kepengurusan Inti</h2>
+    <div class="grid">
+        <div class="card">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.7 0 8 1.34 8 4v4H4v-4c0-2.66 5.3-4 8-4Zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" fill="white"/></svg>
+            </div>
+            <div class="name">Rizky Ramadhan</div>
+            <div class="role">Ketua Umum</div>
+        </div>
+
+        <div class="card">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 2C5.7 13 1 14.2 1 16.5V19h8v-2c0-.68.28-1.3.72-1.72C9.92 14.44 8.95 13 8 13Zm8 0c-.95 0-1.92 1.44-2.72 2.28.44.42.72 1.04.72 1.72V19h8v-2.5c0-2.33-4.67-3.5-7-3.5Z" fill="white"/></svg>
+            </div>
+            <div class="name">Siti Aisyah</div>
+            <div class="role">Wakil Ketua</div>
+        </div>
+
+        <div class="card">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M4 2c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4zm12 14H8v-2h8v2zm-8-3h8v-2H8v2zm0-3h8V8H8v2z" fill="white"/></svg>
+            </div>
+            <div class="name">Ahmad Zaki</div>
+            <div class="role">Sekretaris Umum</div>
+        </div>
+
+        <div class="card">
+            <div class="icon-wrapper">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 18H2v2h19v-2zm-2-7v6H4v-6c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2zm-7 0c0-.55-.45-1-1-1s-1 .45-1 1 .45 1 1 1 1-.45 1-1zM2 4h19v2H2V4z" fill="white"/></svg>
+            </div>
+            <div class="name">Nurul Huda</div>
+            <div class="role">Bendahara Umum</div>
+        </div>
+    </div>
 </div>
-
-<script>
-const dataPelanggaran = {
-    akademik: [
-        "Mencontek saat ujian",
-        "Plagiarisme tugas / skripsi",
-        "Pemalsuan data akademik",
-        "Titip absen",
-        "Lainnya"
-    ],
-    disiplin: [
-        "Sering bolos kuliah",
-        "Terlambat berulang kali",
-        "Tidak mematuhi aturan kelas",
-        "Lainnya"
-    ],
-    etika: [
-        "Berkata kasar / tidak sopan",
-        "Bullying / intimidasi",
-        "Pelecehan verbal atau non-verbal",
-        "Perkelahian",
-        "Lainnya"
-    ],
-    tata_tertib: [
-        "Merokok di area kampus",
-        "Vandalisme fasilitas kampus",
-        "Membawa barang terlarang",
-        "Melanggar aturan berpakaian",
-        "Lainnya"
-    ]
-};
-
-const jenisMasalah = document.getElementById('jenisMasalah');
-const jenisPelanggaran = document.getElementById('jenisPelanggaran');
-
-jenisMasalah.addEventListener('change', function () {
-    const value = this.value;
-
-    jenisPelanggaran.innerHTML = '';
-
-    if (!value) {
-        jenisPelanggaran.disabled = true;
-        jenisPelanggaran.innerHTML =
-            '<option>-- Pilih Jenis Masalah Terlebih Dahulu --</option>';
-        return;
-    }
-
-    jenisPelanggaran.disabled = false;
-
-    dataPelanggaran[value].forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        jenisPelanggaran.appendChild(option);
-    });
-});
-</script>
 
 </body>
 </html>
