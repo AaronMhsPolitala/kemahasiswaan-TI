@@ -24,22 +24,34 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // Validasi input
-        $credentials = $request->validate([
+        $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Coba otentikasi pengguna
-        if (Auth::attempt($credentials)) {
+        // --- Perubahan untuk pesan error spesifik ---
+        // Peringatan Keamanan: Memberitahu secara spesifik apakah email atau password
+        // yang salah dapat menjadi risiko keamanan, karena memungkinkan penyerang
+        // untuk menebak email yang terdaftar.
+
+        $user = User::where('email', $request->email)->first();
+
+        // 1. Cek apakah user dengan email tersebut ada
+        if (! $user) {
+            return back()->with('error', 'Email tidak terdaftar.');
+        }
+
+        // 2. Jika user ada, coba otentikasi
+        if (Auth::attempt($request->only('email', 'password'))) {
             // Jika berhasil, buat ulang sesi
             $request->session()->regenerate();
 
-            // Alihkan ke halaman yang dituju atau beranda user
+            // Alihkan ke halaman yang dituju
             return redirect()->intended('/user/beranda');
         }
 
-        // Jika gagal, kembali ke halaman login dengan pesan error
-        return back()->with('error', 'Email atau Kata Sandi salah.');
+        // 3. Jika otentikasi gagal, berarti password salah
+        return back()->with('error', 'Kata Sandi salah.');
     }
 
     /**

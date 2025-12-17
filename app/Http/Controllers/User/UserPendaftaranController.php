@@ -29,7 +29,12 @@ class UserPendaftaranController extends Controller
 
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|numeric|unique:pendaftarans,nim',
+            'nim' => [
+                'required',
+                'numeric',
+                'unique:pendaftarans,nim',
+                'regex:/^\d{2}01\d{6,}$/' // Example: 2401xxxxxx (10 digits total)
+            ],
             'hp' => 'required|numeric|unique:pendaftarans,hp',
             'divisi_id' => 'required|exists:divisis,id',
             'alasan' => 'required|string',
@@ -38,10 +43,11 @@ class UserPendaftaranController extends Controller
         ], [
             'nim.numeric' => 'NIM harus berupa angka.',
             'nim.unique' => 'NIM ini sudah terdaftar.',
+            'nim.regex' => 'Pendaftaran ini hanya untuk mahasiswa Teknik Informasi.',
             'hp.numeric' => 'Nomor HP harus berupa angka.',
             'hp.unique' => 'Nomor HP ini sudah terdaftar.',
             'berkas_pendaftaran.required' => 'Berkas pendaftaran wajib diunggah.',
-            'berkas_pendaftaran.mimes' => 'Format berkas harus PDF, DOC, DOCX, atau ZIP.',
+            'berkas_pendaftaran.mimes' => 'Format berkas harus berupa gambar (JPEG, PNG, JPG, GIF, atau SVG).',
         ]);
 
         $gambarPath = null;

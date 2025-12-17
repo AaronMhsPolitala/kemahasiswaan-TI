@@ -16,10 +16,10 @@
     }
     .table-container { background-color: #fff; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06); overflow: hidden; }
     .table { width: 100%; border-collapse: collapse; }
-    .table th, .table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+    .table th, .table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; vertical-align: middle; }
     .table thead th { background-color: var(--light-gray); font-weight: 600; color: var(--text-light); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
     .table tbody tr:hover { background-color: #f9fafb; }
-    .action-btns { display: flex; gap: 0.5rem; }
+    .action-btns { display: flex; gap: 0.5rem; align-items: center; }
     .btn { padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; }
     .btn-primary { background-color: var(--primary-color); color: #fff; }
     .btn-edit { background-color: #eab308; color: #fff; }
@@ -32,6 +32,15 @@
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
     .modal-content { background-color: #fefefe; margin: 15% auto; padding: 24px; border-radius: 0.75rem; width: 80%; max-width: 400px; text-align: center; }
     .modal-footer { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; }
+
+    @keyframes spotlight-fade {
+        0% { background-color: #fefce8; } /* yellow-50 */
+        100% { background-color: transparent; }
+    }
+    .spotlight {
+        animation: spotlight-fade 5s ease-out;
+        border: 2px solid #facc15; /* yellow-400 */
+    }
 </style>
 @endpush
 
@@ -86,7 +95,7 @@
             </thead>
             <tbody>
                 @forelse ($prestasis as $prestasi)
-                    <tr>
+                    <tr id="prestasi-{{ $prestasi->id }}" class="{{ session('spotlight') == $prestasi->id ? 'spotlight' : '' }}">
                         <td>{{ $prestasi->nim }}</td>
                         <td>{{ $prestasi->nama_mahasiswa }}</td>
                         <td>{{ number_format($prestasi->ipk, 2) }}</td>
@@ -187,4 +196,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+@if (session('spotlight'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const spotlightedRow = document.getElementById('prestasi-{{ session('spotlight') }}');
+        if (spotlightedRow) {
+            spotlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+</script>
+@endif
 @endpush

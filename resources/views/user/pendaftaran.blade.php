@@ -322,7 +322,7 @@
                     </div>
                 </div>
             @endif
-        @endguest
+        @endauth
 
         <!-- Icon dekoratif pojok kanan -->
         <i class="fa-solid fa-layer-group corner-icon"></i>
@@ -342,7 +342,6 @@
 
                 <p class="subtitle-main">
                     Isi data diri kamu untuk bergabung menjadi bagian dari kepengurusan HIMA TI.
-                    Form ini adalah contoh tampilan statis, tanpa proses simpan ke server.
                 </p>
             </div>
 
@@ -427,7 +426,7 @@
                         Nomor WhatsApp Aktif <span class="required">*</span>
                     </label>
                     <input
-                        type="text"
+                        type="tel"
                         id="hp"
                         name="hp"
                         class="form-control @error('hp') is-invalid @enderror"
@@ -538,3 +537,11 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('hp').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+</script>
+@endpush

@@ -204,9 +204,20 @@ class PrestasiController extends Controller
             $validatedData['bukti_prestasi'] = $path;
         }
 
-        Prestasi::create($validatedData);
+        $newPrestasi = Prestasi::create($validatedData);
 
-        return redirect()->route('admin.prestasi.index')->with('success', 'Data prestasi berhasil ditambahkan.');
+        // --- Logic to find the page of the new record ---
+        $allPrestasis = Prestasi::all()->sortByDesc('total_skor')->values();
+        $position = $allPrestasis->search(function ($prestasi) use ($newPrestasi) {
+            return $prestasi->id === $newPrestasi->id;
+        });
+
+        $perPage = 10; // Same as in index method
+        $page = floor($position / $perPage) + 1;
+
+        return redirect()->route('admin.prestasi.index', ['page' => $page])
+                         ->with('success', 'Data prestasi berhasil ditambahkan.')
+                         ->with('spotlight', $newPrestasi->id);
     }
 
     /**
