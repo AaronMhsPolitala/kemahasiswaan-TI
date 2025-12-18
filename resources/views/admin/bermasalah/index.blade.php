@@ -145,7 +145,7 @@
     </div>
 
     <div class="mt-4">
-        {{ $pengaduans->links() }}
+        {{ $pengaduans->links('vendor.pagination.simple-bootstrap-5') }}
     </div>
 
 

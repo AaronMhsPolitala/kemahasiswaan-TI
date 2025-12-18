@@ -134,7 +134,7 @@
     </tbody>
   </table>
   <div style="margin-top: 1rem;">
-    {{ $users->links() }}
+    {{ $users->links('vendor.pagination.simple-bootstrap-5') }}
   </div>
 </section>
 

@@ -33,6 +33,16 @@
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
     .modal-content { background-color: #fefefe; margin: 15% auto; padding: 24px; border-radius: 0.75rem; width: 80%; max-width: 400px; text-align: center; }
     .modal-footer { margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem; }
+
+    @keyframes spotlight-fade {
+        0% { background-color: #fefce8; } /* yellow-50 */
+        100% { background-color: transparent; }
+    }
+    .spotlight {
+        animation: spotlight-fade 5s ease-out;
+        /* Tambahkan border untuk lebih menonjol di awal */
+        border: 2px solid #facc15; /* yellow-400 */
+    }
 </style>
 @endpush
 
@@ -86,107 +96,119 @@
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                @forelse ($prestasis as $prestasi)
-                    <tr>
-                        <td>{{ $prestasi->nim }}</td>
-                        <td>{{ $prestasi->nama_mahasiswa }}</td>
-                        <td>{{ number_format($prestasi->ipk, 2) }}</td>
-                        <td>{{ number_format($prestasi->total_skor, 2) }}</td>
-                        <td>{{ $prestasi->nama_kegiatan }}</td>
-                        <td>{{ \Carbon\Carbon::parse($prestasi->waktu_penyelenggaraan)->translatedFormat('d F Y') }}</td>
-                        <td>{{ $prestasi->tingkat_kegiatan }}</td>
-                        <td>{{ $prestasi->prestasi_yang_dicapai }}</td>
-                        <td class="action-btns">
-                            <a href="{{ route('admin.prestasi.edit', $prestasi) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
-                            <button type="button" class="btn btn-danger delete-btn" data-id="{{ $prestasi->id }}"><i class="fas fa-trash"></i></button>
-                            <form id="delete-form-{{ $prestasi->id }}" action="{{ route('admin.prestasi.destroy', $prestasi) }}" method="POST" style="display: none;">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="text-center py-5">Tidak ada data prestasi.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    <div class="mt-4">
-        {{ $prestasis->links() }}
-    </div>
-
-
-
-    <!-- Delete Confirmation Modal -->
-    <div id="deleteModal" class="modal">
-        <div class="modal-content">
-            <h3>Konfirmasi Hapus</h3>
-            <p>Apakah Anda yakin ingin menghapus data ini?</p>
-            <div class="modal-footer">
-                <button type="button" id="cancelDelete" class="btn" style="background-color: var(--light-gray);">Batal</button>
-                <button type="button" id="confirmDelete" class="btn btn-danger">Hapus</button>
+                        <tbody>
+                            @forelse ($prestasis as $prestasi)
+                                <tr id="prestasi-{{ $prestasi->id }}" class="{{ session('spotlight') == $prestasi->id ? 'spotlight' : '' }}">
+                                    <td>{{ $prestasi->nim }}</td>
+                                    <td>{{ $prestasi->nama_mahasiswa }}</td>
+                                    <td>{{ number_format($prestasi->ipk, 2) }}</td>
+                                    <td>{{ number_format($prestasi->total_skor, 2) }}</td>
+                                    <td>{{ $prestasi->nama_kegiatan }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($prestasi->waktu_penyelenggaraan)->translatedFormat('d F Y') }}</td>
+                                    <td>{{ $prestasi->tingkat_kegiatan }}</td>
+                                    <td>{{ $prestasi->prestasi_yang_dicapai }}</td>
+                                    <td class="action-btns">
+                                        <a href="{{ route('admin.prestasi.edit', $prestasi) }}" class="btn btn-edit"><i class="fas fa-edit"></i></a>
+                                        <button type="button" class="btn btn-danger delete-btn" data-id="{{ $prestasi->id }}"><i class="fas fa-trash"></i></button>
+                                        <form id="delete-form-{{ $prestasi->id }}" action="{{ route('admin.prestasi.destroy', $prestasi) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="text-center py-5">Tidak ada data prestasi.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            
+                <div class="mt-4">
+                    {{ $prestasis->links('vendor.pagination.simple-bootstrap-5') }}
+                </div>
+            
+            
+            
+                <!-- Delete Confirmation Modal -->
+                <div id="deleteModal" class="modal">
+                    <div class="modal-content">
+                        <h3>Konfirmasi Hapus</h3>
+                        <p>Apakah Anda yakin ingin menghapus data ini?</p>
+                        <div class="modal-footer">
+                            <button type="button" id="cancelDelete" class="btn" style="background-color: var(--light-gray);">Batal</button>
+                            <button type="button" id="confirmDelete" class="btn btn-danger">Hapus</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const deleteModal = document.getElementById('deleteModal');
-    const cancelDelete = document.getElementById('cancelDelete');
-    const confirmDelete = document.getElementById('confirmDelete');
-    let formToSubmit;
-
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const prestasiId = this.dataset.id;
-            formToSubmit = document.getElementById(`delete-form-${prestasiId}`);
-            deleteModal.style.display = 'block';
-        });
-    });
-
-    cancelDelete.addEventListener('click', () => {
-        deleteModal.style.display = 'none';
-    });
-
-    confirmDelete.addEventListener('click', () => {
-        if (formToSubmit) {
-            formToSubmit.submit();
-        }
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target == deleteModal) {
-            deleteModal.style.display = 'none';
-        }
-    });
-
-    const importModal = document.getElementById('importModal');
-    document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            const target = this.dataset.target;
-            document.querySelector(target).style.display = 'block';
-        });
-    });
-
-    document.querySelectorAll('.btn-close').forEach(button => {
-        button.addEventListener('click', function () {
-            this.closest('.modal').style.display = 'none';
-        });
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
-        }
-    });
-});
-</script>
-@endpush
+            @endsection
+            
+            @push('scripts')
+            <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteModal = document.getElementById('deleteModal');
+                const cancelDelete = document.getElementById('cancelDelete');
+                const confirmDelete = document.getElementById('confirmDelete');
+                let formToSubmit;
+            
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const prestasiId = this.dataset.id;
+                        formToSubmit = document.getElementById(`delete-form-${prestasiId}`);
+                        deleteModal.style.display = 'block';
+                    });
+                });
+            
+                cancelDelete.addEventListener('click', () => {
+                    deleteModal.style.display = 'none';
+                });
+            
+                confirmDelete.addEventListener('click', () => {
+                    if (formToSubmit) {
+                        formToSubmit.submit();
+                    }
+                });
+            
+                window.addEventListener('click', (event) => {
+                    if (event.target == deleteModal) {
+                        deleteModal.style.display = 'none';
+                    }
+                });
+            
+                const importModal = document.getElementById('importModal');
+                document.querySelectorAll('[data-toggle="modal"]').forEach(button => {
+                    button.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        const target = this.dataset.target;
+                        document.querySelector(target).style.display = 'block';
+                    });
+                });
+            
+                document.querySelectorAll('.btn-close').forEach(button => {
+                    button.addEventListener('click', function () {
+                        this.closest('.modal').style.display = 'none';
+                    });
+                });
+            
+                window.addEventListener('click', (event) => {
+                    if (event.target.classList.contains('modal')) {
+                        event.target.style.display = 'none';
+                    }
+                });
+            });
+            </script>
+            
+            @if (session('spotlight'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const spotlightedRow = document.getElementById('prestasi-{{ session('spotlight') }}');
+                    if (spotlightedRow) {
+                        spotlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+            </script>
+            @endif
+            @endpush
+            

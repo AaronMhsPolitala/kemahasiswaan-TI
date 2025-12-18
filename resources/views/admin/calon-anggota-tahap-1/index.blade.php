@@ -212,7 +212,7 @@
     </section>
 
     <div class="mt-4">
-        {{ $candidates->links() }}
+        {{ $candidates->links('vendor.pagination.simple-bootstrap-5') }}
     </div>
 
     <!-- Modals -->

@@ -17,6 +17,12 @@
                 </div>
             </div>
 
+            @if(session('success'))
+                <div class="alert alert-success" style="padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#065f46;margin-bottom:12px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <div class="card profile-card shadow-sm border-0 p-4">
                 <div class="card-body">
                     <form action="{{ route('user.profil.update') }}" method="POST" enctype="multipart/form-data">

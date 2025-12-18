@@ -11,12 +11,24 @@ class PengaturanController extends Controller
 {
     public function waSetting()
     {
-        $pesan_diterima = Storage::disk('local')->get('wa_template_diterima.txt');
-        $pesan_ditolak = Storage::disk('local')->get('wa_template_ditolak.txt');
-        $pesan_lolos_wawancara = Storage::disk('local')->get('wa_template_lolos_wawancara.txt');
-        $pesan_gagal_wawancara = Storage::disk('local')->get('wa_template_gagal_wawancara.txt');
+        // Kunci-kunci pengaturan yang akan diambil
+        $keys = [
+            'pesan_diterima',
+            'pesan_ditolak',
+            'pesan_lolos_wawancara',
+            'pesan_gagal_wawancara',
+        ];
 
-        return view('pengurus.pengaturan.wa-setting', compact('pesan_diterima', 'pesan_ditolak', 'pesan_lolos_wawancara', 'pesan_gagal_wawancara'));
+        // Ambil semua pengaturan dari database
+        $settings = Setting::whereIn('key', $keys)->pluck('value', 'key');
+
+        // Siapkan variabel untuk view, dengan nilai default jika tidak ada di DB
+        $data = [];
+        foreach ($keys as $key) {
+            $data[$key] = $settings->get($key, ''); // Default string kosong
+        }
+
+        return view('pengurus.pengaturan.wa-setting', $data);
     }
 
     public function waUpdate(Request $request)
@@ -28,10 +40,16 @@ class PengaturanController extends Controller
             'pesan_gagal_wawancara' => 'required|string',
         ]);
 
-        Storage::disk('local')->put('wa_template_diterima.txt', $request->pesan_diterima);
-        Storage::disk('local')->put('wa_template_ditolak.txt', $request->pesan_ditolak);
-        Storage::disk('local')->put('wa_template_lolos_wawancara.txt', $request->pesan_lolos_wawancara);
-        Storage::disk('local')->put('wa_template_gagal_wawancara.txt', $request->pesan_gagal_wawancara);
+        foreach ($request->all() as $key => $value) {
+            if ($key === '_token' || $key === '_method') {
+                continue;
+            }
+            // Gunakan updateOrCreate untuk membuat atau memperbarui setting
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
 
         return redirect()->route('pengurus.pengaturan.wa.setting')->with('success', 'Pengaturan WhatsApp berhasil diperbarui.');
     }

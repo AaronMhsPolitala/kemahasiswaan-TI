@@ -94,6 +94,12 @@
 
         <h1>Kelola Setting WhatsApp</h1>
 
+        @if(session('success'))
+            <div class="alert alert-success" style="padding:10px 12px;border-radius:8px;background:#ecfdf5;color:#065f46;margin-bottom:12px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
             <div style="flex: 1;">
                 <h2>Kelola Setting Pesan Tahap 1</h2>
