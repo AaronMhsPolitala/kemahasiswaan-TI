@@ -10,7 +10,7 @@
                             <div>
                                 <div class="hero-badge">
                                     <span class="hero-badge-dot"></span>
-                                    HMTI • TEKNOLOGI INFORMASI D3 • POLITALA
+                                    HMTI • TEKNOLOGI INFORMASI D3 • POLI
                                 </div>
             
                                 <h1 class="hero-title">
